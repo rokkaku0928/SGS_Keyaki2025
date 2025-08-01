@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 
 const ONE_HOURS = 3600000;
 const ONE_MINUTES = 60000;
@@ -43,7 +43,7 @@ function Timer() {
 
     return(
         <>
-            {Format(timerCount)}
+            <font size="5">{Format(timerCount)}</font>
         </>
     )
 }
