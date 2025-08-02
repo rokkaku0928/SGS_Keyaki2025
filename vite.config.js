@@ -4,9 +4,9 @@ import react from '@vitejs/plugin-react'
 // https://vite.dev/config/
 export default defineConfig({
   server: {
-    host: '0.0.0.0',
-    port: 3000 // 任意のポート番号
+  host: '0.0.0.0',
+  port: 3000 // 任意のポート番号
   }
   // モバイルで動作を確認するときは↑を使うそれ以外は怖いから下を使え
-  // plugins: [react()],
+  //  plugins: [react()],
 })
