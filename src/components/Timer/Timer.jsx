@@ -1,4 +1,5 @@
-import { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
+import styles from "./Timer.module.css"
 
 const ONE_HOURS = 3600000;
 const ONE_MINUTES = 60000;
@@ -43,7 +44,7 @@ function Timer() {
 
     return(
         <>
-            {Format(timerCount)}
+            <a className={styles.flame}><font size="9">{Format(timerCount)}</font></a>
         </>
     )
 }

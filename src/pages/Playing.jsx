@@ -1,14 +1,17 @@
 import React from 'react'
-import Timer from '../components/Timer'
+import Timer from '../components/Timer/Timer'
+import TargetCamera from '../components/TargetCamera/TargetCamera'
 
 function Playing() {
   return (
     <>
-        <div>Playing</div>
         <Timer/>
+        <TargetCamera/>
     </>
 
   )
 }
 
 export default Playing
+
+
