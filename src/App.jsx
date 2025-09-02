@@ -14,6 +14,7 @@ import Playing from './pages/Playing'
 import Game1 from './components/Games/Game1'
 import Game2 from './components/Games/Game2'
 import Game3 from './components/Games/Game3'
+import GameOver from './components/Games/GameOver';
 
 function App() {
 
@@ -34,6 +35,7 @@ function App() {
             <Route path='/Game1' element={<Game1/>} />
             <Route path='/Game2' element={<Game2/>} />
             <Route path='/Game3' element={<Game3/>} />
+            <Route path='/GameOver' element={<GameOver/>} />
           </Routes>
       </BrowserRouter>
     </>
