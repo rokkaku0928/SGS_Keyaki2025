@@ -4,15 +4,15 @@ import fs from 'fs';
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
-  server: {
-    https: {
-      key: fs.readFileSync('./localhost-key.pem'),
-      cert: fs.readFileSync('./localhost.pem'),
-    },
-    host: true,
-  },
+  // これ↓は自著署名証明書を使ってローカルでサーバーを建てる時に使う
+  // plugins: [react()],
+  // server: {
+  //   https: {
+  //     key: fs.readFileSync('./localhost-key.pem'),
+  //     cert: fs.readFileSync('./localhost.pem'),
+  //   },
+  //   host: true,
+  // },
 
-  // モバイルで動作を確認するときは↑を使うそれ以外は怖いから下を使え
-  //  plugins: [react()],
+  plugins: [react()],
 })
