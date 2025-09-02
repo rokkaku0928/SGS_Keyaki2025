@@ -9,7 +9,6 @@ function TargetCamera() {
   const overlayRef = useRef(null);
   const navigate = useNavigate();
 
-
   const constraints = {
     audio: false, 
     video: {
@@ -53,19 +52,25 @@ function TargetCamera() {
           if (code) {
             drawRect(code.location.topLeftCorner, code.location.bottomRightCorner);
             resultEl.textContent = code.data;
-          } else if (code && code.data === 'game-2') {
-            drawRect(code.location.topLeftCorner, code.location.bottomRightCorner);
-            navigate("/Game2", { replace: true});
-          } else if (code && code.data === "game-3") {
-            drawRect(code.location.topLeftCorner, code.location.bottomRightCorner);
-            navigate("/Game3", { replace: true});
-          } else if (code && code.data === 'game-1') {
-            drawRect(code.location.topLeftCorner, code.location.bottomRightCorner);
-            navigate("/Game1", { replace: true});
+
+            switch (code.data) {
+              case 'game-1':
+                navigate("/Game1", { replace: true });
+                break;
+              case 'game-2':
+                navigate("/Game2", { replace: true });
+                break;
+              case 'game-3':
+                navigate("/Game3", { replace: true });
+                break;
+              default:
+                // 他のQRコードの場合は何もしない
+                break;
+            }
           } else {
             resultEl.textContent = '';
           }
-        }, 300);
+       }, 300);
       } catch (error) {
         console.log('load error', error);
       }
@@ -78,7 +83,7 @@ function TargetCamera() {
       <div id="result" style={{ minHeight: '20px' }}></div>
       <div>
         <div className={styles.CameraPosition}>
-          <video ref={videoRef} style={{ position: 'absolute' }}></video>
+          <video ref={videoRef} style={{ position: 'absolute' }} playsInline autoPlay muted></video>
           <div
             id="overlay"
             ref={overlayRef}
@@ -86,7 +91,6 @@ function TargetCamera() {
           ></div>
         </div>
       </div>
-
     </>
   )
 }
