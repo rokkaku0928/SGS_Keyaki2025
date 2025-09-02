@@ -10,3 +10,17 @@ Currently, two official plugins are available:
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+
+# 使用上の注意
+このWebサイトに使われてるjsQRというQRコードを読み取るときにライブラリがhttpsの通信方式でしか作動しない関係でこのプログラムをローカルホストで立ち上げるには、自著署名証明書を作ってもらう必要がある。
+## 実行するコマンドの順序
+(コマンドはこのリポジトリが入ってるフォルダ内でやってね)
+
+1.choco install mkcert
+2.mkcert -install
+3.mkcert localhost
+
+この順序でコマンドを打てばフォルダ内にlocalhost.pemとかができるはず
+そしてnpm run devとかやったらすんなり動く（はず）。
+
+注：最初のコマンドchocoはChocolateyといってWindows向けに開発されたオープンソースのパッケージ管理システムです。じつはこのインストールにもかなり骨が折れた（個人的に）なんですがこれを読んでる人はすんなりできると信じて祈るばかりです。
