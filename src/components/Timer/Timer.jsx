@@ -1,4 +1,6 @@
-import { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
+import styles from "./Timer.module.css"
+import { useNavigate } from 'react-router-dom';
 
 const ONE_HOURS = 3600000;
 const ONE_MINUTES = 60000;
@@ -10,7 +12,8 @@ function Timer() {
     const [timerCount, setTimerCount] = useState(Limit_Time);
     const [timerState,setTimerState] = useState('active')
     const timerIdRef = useRef(null);
-    // useEffectがエラーを起こしてる
+    const navigate = useNavigate();
+    
     useEffect(() => {
 
         //タイマーのカウントが0を超えているときタイマーをスタート
@@ -24,6 +27,7 @@ function Timer() {
             //タイマーカウントが0になったら、clearIntervalでタイマーを止め、タイマーの状態をEndにする。
             clearInterval(timerIdRef.current);
             setTimerState("end");
+            navigate("/GameOver", { replace: true });
         }
 
         //クリーンアップ関数 useEffectが再実行される前や、コンポーネントのアンマウント時に呼び出され、古いタイマーを停止する。
@@ -43,7 +47,7 @@ function Timer() {
 
     return(
         <>
-            {Format(timerCount)}
+            <a className={styles.flame}><font size="9">{Format(timerCount)}</font></a>
         </>
     )
 }
