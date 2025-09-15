@@ -24,3 +24,49 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# ==========================================
+# === Unity 関連 ===
+# ==========================================
+
+# Unityが自動生成するフォルダ（ビルドキャッシュ、ログなど）
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+
+# ユーザーごとの設定ファイル（エディタ設定など）
+UserSettings/
+
+# メモリキャプチャ関連
+MemoryCaptures/
+
+# UnityのシーンテンプレートやLightmapキャッシュ
+**/Lightmap-*/
+**/LightProbes-*/
+**/GICache/
+
+# Rider, VS, JetBrains, VS Code などのIDE設定ファイル
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+
+# Crashレポートやバックアップファイル
+*.stackdump
+*.log
+*.bak
+*.pidb
+*.booproj
+*.svd
+
+# ビルド出力関連
+Build/
+Builds/
+bin/
+obj/
