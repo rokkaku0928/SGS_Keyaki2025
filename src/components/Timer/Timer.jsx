@@ -1,18 +1,20 @@
 import React, { useRef, useState, useEffect } from "react";
 import styles from "./Timer.module.css"
-import { useNavigate } from 'react-router-dom';
 
 const ONE_HOURS = 3600000;
 const ONE_MINUTES = 60000;
 const ONE_SECONDS = 1000;
 
-function Timer() {
+function Timer(props) {
     // Limit＿Timeが制限時間を定義してる
     const Limit_Time = 120000;
     const [timerCount, setTimerCount] = useState(Limit_Time);
     const [timerState,setTimerState] = useState('active')
     const timerIdRef = useRef(null);
-    const navigate = useNavigate();
+    const {
+        gameState,
+        setGameState
+    } = props;
     
     useEffect(() => {
 
@@ -27,7 +29,7 @@ function Timer() {
             //タイマーカウントが0になったら、clearIntervalでタイマーを止め、タイマーの状態をEndにする。
             clearInterval(timerIdRef.current);
             setTimerState("end");
-            navigate("/GameOver", { replace: true });
+            setGameState('Finished');
         }
 
         //クリーンアップ関数 useEffectが再実行される前や、コンポーネントのアンマウント時に呼び出され、古いタイマーを停止する。
