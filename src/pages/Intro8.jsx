@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-export default function Intro8() {
+export default function Intro8({introStep, setIntroStep }) {
   return (
     <>
         <h1>Intro8</h1>
@@ -10,8 +10,8 @@ export default function Intro8() {
         <p>そうそう、部屋には時間制限がある</p>
         <p>それを超えるとゲームオーバーとなるので</p>
         <p>必ず時間制限内に部屋から脱出してくれ</p>
-        <Link to='/intro-9'>次へ</Link>
-        <Link to='/intro-7'>戻る</Link>
+        <button onClick={() => setIntroStep(introStep + 1)} >つぎへ</button>
+        <button onClick={() => setIntroStep(introStep - 1)} >もどる</button>
     </>
   )
 }

@@ -3,11 +3,10 @@ import styles from "./TargetCamera.module.css";
 import { useNavigate } from 'react-router-dom';
 import jsQR from "jsqr";
 
-function TargetCamera() {
+function TargetCamera({playState, setPlayState }) {
 
   const videoRef = useRef(null);
   const overlayRef = useRef(null);
-  const navigate = useNavigate();
 
   const constraints = {
     audio: false, 
@@ -53,15 +52,16 @@ function TargetCamera() {
             drawRect(code.location.topLeftCorner, code.location.bottomRightCorner);
             resultEl.textContent = code.data;
 
+
             switch (code.data) {
               case 'game-1':
-                navigate("/Game1", { replace: true });
+                setPlayState(1)
                 break;
               case 'game-2':
-                navigate("/Game2", { replace: true });
+                setPlayState(2)
                 break;
               case 'game-3':
-                navigate("/Game3", { replace: true });
+                setPlayState(3)
                 break;
               default:
                 // 他のQRコードの場合は何もしない
