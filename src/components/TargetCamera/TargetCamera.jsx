@@ -30,6 +30,7 @@ function TargetCamera({playState, setPlayState }) {
     }
   };
 
+
   useEffect(() => {
     (async () => {
       try {
@@ -83,7 +84,7 @@ function TargetCamera({playState, setPlayState }) {
       <div id="result" style={{ minHeight: '20px' }}></div>
       <div>
         <div className={styles.CameraPosition}>
-          <video ref={videoRef} style={{ position: 'absolute' }} playsInline autoPlay muted></video>
+          <video ref={videoRef} style={{ position: 'absolute', zIndex: 3 }} playsInline autoPlay muted></video>
           <div
             id="overlay"
             ref={overlayRef}

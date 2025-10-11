@@ -24,14 +24,14 @@ import Score from './components/Score/Score'
 function App() {
 
   const [gameState, setGameState] = useState('Intro');
-  const [scoreState, setScoreState] = useState(0);
+  const [scoreState, setScoreState] = useState(2);
   const [introStep, setIntroStep] = useState(0);
   // playStateは何の電子ゲームをやってるか？という処理と
   // 電子ゲームかカメラか？という処理を兼ねている
   // playStateが０ならカメラ、その他n（何らかの数字）
   // だったらn番目のゲーム
   const [playState, setPlayState] = useState(0);
-
+  const totalKeys = 10; // 鍵の総数
 
   const renderContent = () => {
     switch (gameState) {
@@ -59,14 +59,28 @@ function App() {
           <Game3 playState={playState} setPlayState={setPlayState} />,
         ];
         return (
-          <>
-            {playState == 0? <><Timer gameState={gameState} setGameState={setGameState}/> <TargetCamera playState={playState} setPlayState={setPlayState}/> <Score/></>:Games[playState - 1]}
-          </>
+          <dev className="w-full max-w-sm h-[80vh]">
+            
+            <Timer gameState={gameState} setGameState={setGameState}/>
+            {playState === 0 ? (
+              <div className="grid grid-rows-2 h-full w-full">
+                <div className="row-span-1">
+                  <TargetCamera playState={playState} setPlayState={setPlayState} />
+                </div>
+                <div className="row-span-1 flex justify-center w-full">
+                  <Score score={scoreState} total={totalKeys} className="w-full" />
+                </div>
+              </div>
+            ) : (
+              Games[playState - 1]
+            )}
+
+          </ dev>
         );
 
       case 'Finished':
         // スコアが閾値以上かどうかで表示する終了画面を変える
-        if (score >= SCORE_THRESHOLD) {
+        if (scoreState >= SCORE_THRESHOLD) {
           return (
             <EndScreen
               title="素晴らしい！"
