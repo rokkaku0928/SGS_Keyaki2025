@@ -1,0 +1,13 @@
+.KeyBar {
+    position:fixed;
+    left: 0;
+    right: 0;
+    bottom: 10px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 20px;
+    z-index: 3;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom));
+}
