@@ -6,9 +6,9 @@ function Game1({scoreState, setScoreState , playState, setPlayState}) {
 
     const { unityProvider, sendMessage, isLoaded } = useUnityContext({
         loaderUrl: "/unity1/Build/unity1.loader.js",
-        dataUrl: "/unity1/Build/unity1.data.br",
-        frameworkUrl: "/unity1/Build/unity1.framework.js.br",
-        codeUrl: "/unity1/Build/unity1.wasm.br",
+        dataUrl: "/unity1/Build/unity1.data",
+        frameworkUrl: "/unity1/Build/unity1.framework.js",
+        codeUrl: "/unity1/Build/unity1.wasm",
     });
 
     // ゲーム中の"もどる"ボタン
