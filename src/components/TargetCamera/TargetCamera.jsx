@@ -32,52 +32,74 @@ function TargetCamera({playState, setPlayState }) {
 
 
   useEffect(() => {
+
+    let stream; // クリーンアップ関数でアクセスできるようにするため、外で宣言
+    let timer;  // こちらも同様
+
     (async () => {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia(constraints);
+        stream = await navigator.mediaDevices.getUserMedia(constraints); // 変数に代入
         const video = videoRef.current;
-        video.srcObject = stream;
-        await video.play();
+        
+        if (video) {
+          video.srcObject = stream;
+          await video.play();
 
-        const { width, height } = constraints.video;
-        const canvas = new OffscreenCanvas(width, height);
-        const context = canvas.getContext('2d');
+          const { width, height } = constraints.video;
+          const canvas = new OffscreenCanvas(width, height);
+          const context = canvas.getContext('2d');
 
-        const timer = setInterval(() => {
-          context.drawImage(video, 0, 0, width, height);
-          const imageData = context.getImageData(0, 0, width, height);
-          const code = jsQR(imageData.data, imageData.width, imageData.height);
-          const resultEl = document.querySelector('#result');
+          timer = setInterval(() => { // 変数に代入
+            if (!videoRef.current) return; // 念のためチェック
 
-          if (code) {
-            drawRect(code.location.topLeftCorner, code.location.bottomRightCorner);
-            resultEl.textContent = code.data;
+            context.drawImage(video, 0, 0, width, height);
+            const imageData = context.getImageData(0, 0, width, height);
+            const code = jsQR(imageData.data, imageData.width, imageData.height);
+            const resultEl = document.querySelector('#result');
 
+            if (code) {
+              if (resultEl) { // 要素が存在するかチェックしてから操作する
+                drawRect(code.location.topLeftCorner, code.location.bottomRightCorner);
+                resultEl.textContent = code.data;
+              }
 
-            switch (code.data) {
-              case 'game-1':
-                setPlayState(1)
-                break;
-              case 'game-2':
-                setPlayState(2)
-                break;
-              case 'game-3':
-                setPlayState(3)
-                break;
-              default:
-                // 他のQRコードの場合は何もしない
-                break;
+              switch (code.data) {
+                case 'game-1':
+                  setPlayState(1);
+                  break;
+                case 'game-2':
+                  setPlayState(2);
+                  break;
+                case 'game-3':
+                  setPlayState(3);
+                  break;
+                default:
+                  break;
+              }
+            } else {
+              if (resultEl) { // 要素が存在するかチェックしてから操作する
+                resultEl.textContent = 'No QR code detected';
+              }
             }
-          } else {
-            resultEl.textContent = '';
-          }
-       }, 300);
+          }, 300);
+        }
       } catch (error) {
         console.log('load error', error);
       }
     })();
-  }, []);
 
+    // --- ここがクリーンアップ関数です ---
+    // コンポーネントがアンマウントされる（画面から消える）時に実行されます
+    return () => {
+      console.log("カメラとタイマーをクリーンアップします。");
+      if (timer) {
+        clearInterval(timer); // タイマーを停止
+      }
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop()); // カメラストリームを停止
+      }
+    };
+  }, []);
 
   return (
     <>

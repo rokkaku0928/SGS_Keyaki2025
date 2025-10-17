@@ -10,7 +10,6 @@ import Intro6 from './pages/Intro6'
 import Intro7 from './pages/Intro7'
 import Intro8 from './pages/Intro8'
 import Intro9 from './pages/Intro9'
-import Playing from './pages/Playing'
 import Game1 from './components/Games/Game1'
 import Game2 from './components/Games/Game2'
 import Game3 from './components/Games/Game3'
@@ -24,7 +23,7 @@ import Score from './components/Score/Score'
 function App() {
 
   const [gameState, setGameState] = useState('Intro');
-  const [scoreState, setScoreState] = useState(2);
+  const [scoreState, setScoreState] = useState(0);
   const [introStep, setIntroStep] = useState(0);
   // playStateは何の電子ゲームをやってるか？という処理と
   // 電子ゲームかカメラか？という処理を兼ねている
@@ -54,12 +53,12 @@ function App() {
         )
       case 'Playing':
         const Games = [
-          <Game1 playState={playState} setPlayState={setPlayState} />,
-          <Game2 playState={playState} setPlayState={setPlayState} />,
-          <Game3 playState={playState} setPlayState={setPlayState} />,
+          <Game1 scoreState={scoreState} setScoreState={setScoreState} setPlayState={setPlayState} playState={playState} />,
+          <Game2 scoreState={scoreState} setScoreState={setScoreState} setPlayState={setPlayState} playState={playState} />,
+          <Game3 scoreState={scoreState} setScoreState={setScoreState} setPlayState={setPlayState} playState={playState} />,
         ];
         return (
-          <dev className="w-full max-w-sm h-[80vh]">
+          <>
             
             <Timer gameState={gameState} setGameState={setGameState}/>
             {playState === 0 ? (
@@ -75,7 +74,7 @@ function App() {
               Games[playState - 1]
             )}
 
-          </ dev>
+          </>
         );
 
       case 'Finished':
@@ -109,24 +108,6 @@ function App() {
   return (
     <>
       {renderContent()}
-      <BrowserRouter>
-        <Routes>
-          <Route path='/intro-1' element={<Intro1 />} />
-          <Route path='/intro-2' element={<Intro2 />} />
-          <Route path='/intro-3' element={<Intro3 />} />
-          <Route path='/intro-4' element={<Intro4 />} />
-          <Route path='/intro-5' element={<Intro5 />} />
-          <Route path='/intro-6' element={<Intro6 />} />
-          <Route path='/intro-7' element={<Intro7 />} />
-          <Route path='/intro-8' element={<Intro8 />} />
-          <Route path='/intro-9' element={<Intro9 />} />
-          <Route path='/Playing' element={<Playing />} />
-          <Route path='/Game1' element={<Game1 />} />
-          <Route path='/Game2' element={<Game2 />} />
-          <Route path='/Game3' element={<Game3 />} />
-          <Route path='/GameOver' element={<GameOver />} />
-        </Routes>
-      </BrowserRouter>
     </>
   )
 }
