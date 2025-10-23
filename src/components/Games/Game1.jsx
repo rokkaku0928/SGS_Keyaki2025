@@ -2,14 +2,17 @@ import React ,{  useEffect, useCallback } from 'react'
 import { Unity, useUnityContext } from "react-unity-webgl";
 import styles from "./Game.module.css";
 
+
 function Game1({scoreState, setScoreState , playState, setPlayState}) {
 
-    const { unityProvider, sendMessage, isLoaded } = useUnityContext({
+    const { unityProvider, loadingProgression, isLoaded } = useUnityContext({
         loaderUrl: "/unity1/Build/unity1.loader.js",
         dataUrl: "/unity1/Build/unity1.data",
         frameworkUrl: "/unity1/Build/unity1.framework.js",
         codeUrl: "/unity1/Build/unity1.wasm",
     });
+
+    const loadingPercentage = Math.round(loadingProgression * 100);
 
     // ゲーム中の"もどる"ボタン
     const BackButton = useCallback(() => {
@@ -38,8 +41,18 @@ function Game1({scoreState, setScoreState , playState, setPlayState}) {
     
     return (
         <div className={styles.gameContainer}>
+            {isLoaded === false && (
+                // We'll conditionally render the loading overlay if the Unity
+                // Application is not loaded.
+                <div className={styles.loadingOverlay}>
+                    <p>読み込み中... ({loadingPercentage}%)</p>
+                </div>
+            )}
+                    
+
+
             <Unity 
-                unityProvider={unityProvider} 
+                unityProvider={unityProvider}
                 className={styles.unityCanvas}
             />
         </ div>

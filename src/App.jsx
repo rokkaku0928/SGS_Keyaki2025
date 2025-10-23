@@ -13,10 +13,12 @@ import Intro9 from './pages/Intro9'
 import Game1 from './components/Games/Game1'
 import Game2 from './components/Games/Game2'
 import Game3 from './components/Games/Game3'
+import Game4 from './components/Games/Game4';
 import GameOver from './components/Games/GameOver'
 import TargetCamera from './components/TargetCamera/TargetCamera';
 import Timer from './components/Timer/Timer';
 import Score from './components/Score/Score'
+import EndScreen from './pages/EndScreen';
 
 
 
@@ -56,6 +58,7 @@ function App() {
           <Game1 scoreState={scoreState} setScoreState={setScoreState} setPlayState={setPlayState} playState={playState} />,
           <Game2 scoreState={scoreState} setScoreState={setScoreState} setPlayState={setPlayState} playState={playState} />,
           <Game3 scoreState={scoreState} setScoreState={setScoreState} setPlayState={setPlayState} playState={playState} />,
+          <Game4 scoreState={scoreState} setScoreState={setScoreState} setPlayState={setPlayState} playState={playState} />,
         ];
         return (
           <>
@@ -79,25 +82,47 @@ function App() {
 
       case 'Finished':
         // スコアが閾値以上かどうかで表示する終了画面を変える
-        if (scoreState >= SCORE_THRESHOLD) {
+        if ( 0 == scoreState ) {
           return (
             <EndScreen
               title="素晴らしい！"
               message="見事な結果です！おめでとうございます！"
-              score={score}
+              score={scoreState}
               onRetry={handleRetry}
             />
           );
-        } else {
+        } else if ( 1 <= scoreState && scoreState <= 2) {
+          return (
+            <EndScreen
+              title="素晴らしい！"
+              message="見事な結果です！おめでとうございます！"
+              score={scoreState}
+              onRetry={handleRetry}
+            />
+          );
+
+        } else if (3 <= scoreState && scoreState <= 5) {
           return (
             <EndScreen
               title="残念！"
               message="あと一歩でした。もう一度挑戦してみましょう！"
-              score={score}
+              score={scoreState}
               onRetry={handleRetry}
             />
           );
+        } else if (6 <= scoreState && scoreState <= 8) {
+          return (
+            <EndScreen
+              title="もう少し！"
+              message="惜しい結果です。次回はもっと頑張りましょう！"
+              score={scoreState}
+              onRetry={handleRetry}
+            />
+          );
+        } else if (9 <= scoreState && scoreState <= 10) {
         }
+          
+        
 
       default:
         return null;
