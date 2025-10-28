@@ -25,7 +25,7 @@ import EndScreen from './pages/EndScreen';
 function App() {
 
   const [gameState, setGameState] = useState('Intro');
-  const [scoreState, setScoreState] = useState(0);
+  const [scoreState, setScoreState] = useState(7);
   const [introStep, setIntroStep] = useState(0);
   // playStateは何の電子ゲームをやってるか？という処理と
   // 電子ゲームかカメラか？という処理を兼ねている
@@ -79,16 +79,15 @@ function App() {
 
           </>
         );
-
       case 'Finished':
         // スコアが閾値以上かどうかで表示する終了画面を変える
         if ( 0 == scoreState ) {
           return (
             <EndScreen
-              title="素晴らしい！"
-              message="見事な結果です！おめでとうございます！"
+              title="残念だ..."
+              message="依頼料だ。受け取ってくれ"
               score={scoreState}
-              onRetry={handleRetry}
+              design="minimal" // この 'modern' が styles.modern にマッピングされます
             />
           );
         } else if ( 1 <= scoreState && scoreState <= 2) {
@@ -97,33 +96,36 @@ function App() {
               title="素晴らしい！"
               message="見事な結果です！おめでとうございます！"
               score={scoreState}
-              onRetry={handleRetry}
+              design="modern" // この 'modern' が styles.modern にマッピングされます
             />
           );
 
         } else if (3 <= scoreState && scoreState <= 5) {
           return (
             <EndScreen
-              title="残念！"
-              message="あと一歩でした。もう一度挑戦してみましょう！"
+              title="よくやった！！"
+              message="見事な結果です！おめでとうございます！"
               score={scoreState}
-              onRetry={handleRetry}
+              design="retro" // この 'modern' が styles.modern にマッピングされます
             />
           );
         } else if (6 <= scoreState && scoreState <= 8) {
           return (
             <EndScreen
-              title="もう少し！"
-              message="惜しい結果です。次回はもっと頑張りましょう！"
+              title="素晴らしい！"
+              message="見事な結果です！おめでとうございます！"
               score={scoreState}
-              onRetry={handleRetry}
+              design="cyber" // この 'modern' が styles.modern にマッピングされます
             />
           );
         } else if (9 <= scoreState && scoreState <= 10) {
+            <EndScreen
+              title="素晴らしい！"
+              message="見事な結果です！おめでとうございます！"
+              score={scoreState}
+              design="playful" // この 'modern' が styles.modern にマッピングされます
+            />
         }
-          
-        
-
       default:
         return null;
     }

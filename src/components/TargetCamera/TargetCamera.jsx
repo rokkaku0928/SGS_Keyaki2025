@@ -1,124 +1,163 @@
 import React, { useEffect, useRef } from 'react';
 import styles from "./TargetCamera.module.css";
-import { useNavigate } from 'react-router-dom';
 import jsQR from "jsqr";
 
-function TargetCamera({playState, setPlayState }) {
+function TargetCamera({ playState, setPlayState }) {
 
+  const containerRef = useRef(null);
   const videoRef = useRef(null);
   const overlayRef = useRef(null);
 
   const constraints = {
-    audio: false, 
+    audio: false,
     video: {
-      facingMode: 'environment', 
-      width: 400, 
-      height: 700, 
+      facingMode: 'environment',
+      // ここはブラウザに任せて最適な解像度を選ばせる（モバイルでの柔軟性のため）
+      width: { ideal: 1280 },
+      height: { ideal: 720 },
     }
   };
 
-  const drawRect = (topLeft, bottomRight) => {
-    const { x: x1, y: y1 } = topLeft;
-    const { x: x2, y: y2 }= bottomRight;
-
+  const drawRect = (topLeft, bottomRight, canvasWidth, canvasHeight) => {
     const overlay = overlayRef.current;
-    if (overlay) {
-      overlay.style.left = `${x1}px`;
-      overlay.style.top = `${y1}px`;
-      overlay.style.width = `${x2 - x1}px`;
-      overlay.style.height = `${y2 - y1}px`;
-    }
-  };
+    const video = videoRef.current;
+    const container = containerRef.current;
+    if (!overlay || !video || !container) return;
 
+    const vRect = video.getBoundingClientRect();
+    const cRect = container.getBoundingClientRect();
+
+    const scaleX = vRect.width / canvasWidth;
+    const scaleY = vRect.height / canvasHeight;
+
+    const x1 = topLeft.x * scaleX + (vRect.left - cRect.left);
+    const y1 = topLeft.y * scaleY + (vRect.top - cRect.top);
+    const w = (bottomRight.x - topLeft.x) * scaleX;
+    const h = (bottomRight.y - topLeft.y) * scaleY;
+
+    overlay.style.left = `${x1}px`;
+    overlay.style.top = `${y1}px`;
+    overlay.style.width = `${w}px`;
+    overlay.style.height = `${h}px`;
+    overlay.style.display = 'block';
+  };
 
   useEffect(() => {
-
-    let stream; // クリーンアップ関数でアクセスできるようにするため、外で宣言
-    let timer;  // こちらも同様
+    let stream = null;
+    let timer = null;
 
     (async () => {
       try {
-        stream = await navigator.mediaDevices.getUserMedia(constraints); // 変数に代入
+        stream = await navigator.mediaDevices.getUserMedia(constraints);
         const video = videoRef.current;
-        
-        if (video) {
-          video.srcObject = stream;
-          await video.play();
+        if (!video) return;
 
-          const { width, height } = constraints.video;
-          const canvas = new OffscreenCanvas(width, height);
-          const context = canvas.getContext('2d');
+        video.srcObject = stream;
+        await video.play();
 
-          timer = setInterval(() => { // 変数に代入
-            if (!videoRef.current) return; // 念のためチェック
+        // 動的キャンバス：実際のビデオ解像度に合わせる
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
 
-            context.drawImage(video, 0, 0, width, height);
-            const imageData = context.getImageData(0, 0, width, height);
-            const code = jsQR(imageData.data, imageData.width, imageData.height);
-            const resultEl = document.querySelector('#result');
+        const setupCanvasSize = () => {
+          // video.videoWidth/Height は再生開始後に正しい値になる
+          const vw = video.videoWidth || video.clientWidth;
+          const vh = video.videoHeight || video.clientHeight;
+          canvas.width = vw;
+          canvas.height = vh;
+        };
 
-            if (code) {
-              if (resultEl) { // 要素が存在するかチェックしてから操作する
-                drawRect(code.location.topLeftCorner, code.location.bottomRightCorner);
-                resultEl.textContent = code.data;
-              }
+        setupCanvasSize();
 
-              switch (code.data) {
-                case 'game-1':
-                  setPlayState(1);
-                  break;
-                case 'game-2':
-                  setPlayState(2);
-                  break;
-                case 'game-3':
-                  setPlayState(3);
-                  break;
-                case 'game-4':
-                  setPlayState(4);
-                  break;
-                default:
-                  break;
-              }
-            } else {
-              if (resultEl) { // 要素が存在するかチェックしてから操作する
-                resultEl.textContent = 'No QR code detected';
-              }
+        // ウィンドウリサイズ時はキャンバス/オーバーレイをリセット
+        const handleResize = () => {
+          setupCanvasSize();
+          const overlay = overlayRef.current;
+          if (overlay) overlay.style.display = 'none';
+        };
+        window.addEventListener('resize', handleResize);
+
+        timer = setInterval(() => {
+          if (!video || video.readyState < 2) return;
+
+          // canvasサイズが変わっていれば更新
+          if (canvas.width !== video.videoWidth || canvas.height !== video.videoHeight) {
+            setupCanvasSize();
+          }
+
+          context.drawImage(video, 0, 0, canvas.width, canvas.height);
+          const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+          const code = jsQR(imageData.data, imageData.width, imageData.height);
+          const resultEl = document.querySelector('#result');
+
+          if (code) {
+            if (resultEl) {
+              resultEl.textContent = code.data;
             }
-          }, 300);
-        }
+            drawRect(code.location.topLeftCorner, code.location.bottomRightCorner, canvas.width, canvas.height);
+
+            switch (code.data) {
+              case 'game-1':
+                setPlayState(1);
+                break;
+              case 'game-2':
+                setPlayState(2);
+                break;
+              case 'game-3':
+                setPlayState(3);
+                break;
+              case 'game-4':
+                setPlayState(4);
+                break;
+              default:
+                break;
+            }
+          } else {
+            if (resultEl) {
+              resultEl.textContent = 'No QR code detected';
+            }
+            const overlay = overlayRef.current;
+            if (overlay) overlay.style.display = 'none';
+          }
+        }, 300);
+
+        // クリーンアップにリサイズリスナーも含める
+        return () => {
+          window.removeEventListener('resize', handleResize);
+        };
       } catch (error) {
         console.log('load error', error);
       }
     })();
 
-    // --- ここがクリーンアップ関数です ---
-    // コンポーネントがアンマウントされる（画面から消える）時に実行されます
     return () => {
-      console.log("カメラとタイマーをクリーンアップします。");
-      if (timer) {
-        clearInterval(timer); // タイマーを停止
-      }
+      if (timer) clearInterval(timer);
       if (stream) {
-        stream.getTracks().forEach(track => track.stop()); // カメラストリームを停止
+        stream.getTracks().forEach(track => track.stop());
       }
     };
-  }, []);
+  }, [setPlayState]);
 
   return (
     <>
       <div id="result" style={{ minHeight: '20px' }}></div>
-      <div>
-        <div className={styles.CameraPosition}>
-          <video ref={videoRef} style={{ position: 'absolute', zIndex: 3 }} playsInline autoPlay muted></video>
-          <div
-            id="overlay"
-            ref={overlayRef}
-            className={styles.CameraAim}
-          ></div>
-        </div>
+      <div ref={containerRef} className={styles.CameraPosition}>
+        <video
+          ref={videoRef}
+          className={styles.VideoElement}
+          playsInline
+          autoPlay
+          muted
+        />
+        <div
+          id="overlay"
+          ref={overlayRef}
+          className={styles.CameraAim}
+          style={{ display: 'none' }}
+        ></div>
       </div>
     </>
-  )
+  );
 }
 
-export default TargetCamera
+export default TargetCamera;

@@ -1,6 +1,7 @@
 import React from 'react'
 import { useOrientation } from './useOrientation'; // 上記で作成したフックをインポート
 import { Unity, useUnityContext } from "react-unity-webgl";
+// H.T
 
 /**
  * 縦画面時に表示する警告コンポーネント

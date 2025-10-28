@@ -1,0 +1,281 @@
+/* Google Fontsのインポートはグローバルに動作します */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@700&display=swap');
+
+/* --- 共通スタイル --- */
+.endscreenContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+  width: 500px;
+  border-radius: 12px;
+  text-align: center;
+  font-family: sans-serif;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+
+.endscreenContent {
+  max-width: 90%;
+}
+
+.endscreenTitle {
+  margin: 0 0 10px;
+}
+
+.endscreenScore {
+  font-size: 1.5em;
+  margin: 15px 0;
+}
+
+.endscreenScore span {
+  font-weight: bold;
+}
+
+.endscreenMessage {
+  margin: 10px 0 25px;
+}
+
+.endscreenRetryButton {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.endscreenRetryButton:hover {
+  transform: scale(1.05);
+}
+
+
+/* --- 1. Modern デザイン --- */
+/* .endscreenContainer.modern {} を .modern {} として定義 */
+.modern {
+  background: #2c3e50;
+  color: #ecf0f1;
+}
+/* セレクタのネスト(子孫セレクタ)を使ってスタイルを適用 */
+.modern .endscreenTitle {
+  font-size: 2.8em;
+  color: #ffffff;
+}
+.modern .endscreenScore span {
+  color: #1abc9c;
+}
+.modern .endscreenRetryButton {
+  background-color: #1abc9c;
+  color: white;
+}
+.modern .endscreenRetryButton:hover {
+  background-color: #16a085;
+}
+
+
+/* --- 2. Retro デザイン --- */
+.retro {
+  background: #000000;
+  color: #00ff00;
+  border: 4px solid #00ff00;
+  border-radius: 0;
+  font-family: 'Press Start 2P', cursive;
+  box-shadow: none;
+}
+.retro .endscreenTitle {
+  font-size: 2em;
+  color: #ffff00;
+  text-shadow: 2px 2px #ff00ff;
+}
+.retro .endscreenScore span {
+  color: #00ffff;
+}
+.retro .endscreenRetryButton {
+  background-color: #00ff00;
+  color: #000000;
+  border-radius: 0;
+  border: 2px solid #00ff00;
+}
+.retro .endscreenRetryButton:hover {
+  background-color: #000000;
+  color: #00ff00;
+}
+
+
+/* --- 3. Minimal デザイン --- */
+.minimal {
+  background: #ffffff;
+  color: #333;
+  border: 1px solid #e0e0e0;
+}
+.minimal .endscreenTitle {
+  font-size: 2.5em;
+  font-weight: 300;
+  color: #222;
+}
+.minimal .endscreenScore {
+  font-weight: 300;
+}
+.minimal .endscreenScore span {
+  color: #007aff;
+  font-weight: 500;
+}
+.minimal .endscreenMessage {
+  color: #666;
+}
+.minimal .endscreenRetryButton {
+  background-color: transparent;
+  color: #007aff;
+  border: 1px solid #007aff;
+}
+.minimal .endscreenRetryButton:hover {
+  background-color: #007aff;
+  color: white;
+}
+
+
+/* --- 4. Playful デザイン --- */
+.playful {
+  background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+  color: #5d4037;
+  border: 3px solid white;
+  font-family: 'Baloo 2', cursive;
+  position: relative;
+  overflow: hidden;
+}
+/* :global() を使わずに、擬似要素で対応 */
+.playful::before {
+  content: '★';
+  position: absolute;
+  top: 15px; left: 20px;
+  font-size: 2em;
+  color: white;
+  transform: rotate(-15deg);
+}
+.playful::after {
+  content: '🎉';
+  position: absolute;
+  bottom: 15px; right: 20px;
+  font-size: 2em;
+  color: white;
+  transform: rotate(15deg);
+}
+.playful .endscreenTitle {
+  font-size: 3em;
+  color: white;
+  text-shadow: 2px 2px #f06292;
+}
+.playful .endscreenScore span {
+  color: #c51162;
+}
+.playful .endscreenRetryButton {
+  background-color: #ffeb3b;
+  color: #5d4037;
+  border-radius: 50px;
+  font-weight: bold;
+  box-shadow: 0 4px 0 #c7b82e;
+}
+.playful .endscreenRetryButton:hover {
+  transform: translateY(2px) scale(1.05);
+  box-shadow: 0 2px 0 #c7b82e;
+}
+
+/* --- スマートフォン対応 (レスポンシブ) --- */
+/* 画面幅が600px以下の場合に適用 */
+@media (max-width: 600px) {
+  
+  .endscreenContainer {
+    /* 横幅を画面の90%に、高さを自動に */
+    width: 90vw; 
+    height: auto;
+    padding: 20px;
+  }
+
+  .endscreenTitle {
+    font-size: 2.2em; /* タイトルサイズを少し小さく */
+  }
+
+  .endscreenScore {
+    font-size: 1.3em; /* スコアサイズを少し小さく */
+  }
+
+  .endscreenRetryButton {
+    padding: 14px 20px; /* ボタンを少し大きくしてタップしやすく */
+    font-size: 1.1em;
+  }
+
+  /* --- 各テーマのフォントサイズ調整 --- */
+  
+  .modern .endscreenTitle {
+    font-size: 2.5em;
+  }
+
+  .retro .endscreenTitle {
+    font-size: 1.5em; /* Retroは元が大きめなので、より小さく */
+    line-height: 1.4;
+  }
+
+  .minimal .endscreenTitle {
+    font-size: 2.2em;
+  }
+
+  .playful .endscreenTitle {
+    font-size: 2.5em;
+  }
+
+  .cyber .endscreenTitle {
+    font-size: 2.0em;
+    line-height: 1.3;
+  }
+
+  /* Playfulの絵文字がはみ出ないように調整 */
+  .playful::before {
+    top: 10px;
+    left: 10px;
+    font-size: 1.5em;
+  }
+  .playful::after {
+    bottom: 10px;
+    right: 10px;
+    font-size: 1.5em;
+  }
+}
+
+/* --- 5. Cyber デザイン --- */
+.cyber {
+  background: #0a0f2c;
+  color: #a3f9ff;
+  border: 2px solid #00ffff;
+  box-shadow: 0 0 15px #00ffff, inset 0 0 10px #00ffff;
+  font-family: 'monospace', 'Courier New', Courier;
+  border-radius: 4px;
+}
+.cyber .endscreenTitle {
+  font-size: 2.6em;
+  color: #ff00ff;
+  text-shadow: 0 0 5px #ff00ff, 0 0 10px #ffffff;
+}
+.cyber .endscreenScore span {
+  color: #ffff00;
+  font-weight: 700;
+}
+.cyber .endscreenMessage {
+  color: #cccccc;
+}
+.cyber .endscreenRetryButton {
+  background-color: transparent;
+  color: #00ffff;
+  border: 2px solid #00ffff;
+  border-radius: 4px;
+  box-shadow: 0 0 5px #00ffff;
+}
+.cyber .endscreenRetryButton:hover {
+  background-color: #00ffff;
+  color: #0a0f2c;
+  box-shadow: 0 0 15px #00ffff;
+  transform: scale(1.05);
+}
