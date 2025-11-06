@@ -34,8 +34,8 @@ dist-ssr
 [Ll]ibrary/
 [Tt]emp/
 [Oo]bj/
-[Bb]uild/
-[Bb]uilds/
+# [Bb]uild/
+# [Bb]uilds/
 [Ll]ogs/
 
 # ユーザーごとの設定ファイル（エディタ設定など）
@@ -67,7 +67,7 @@ MemoryCaptures/
 *.svd
 
 # ビルド出力関連
-Build/
-Builds/
-bin/
-obj/
+# Build/
+# Builds/
+# bin/
+#obj/
