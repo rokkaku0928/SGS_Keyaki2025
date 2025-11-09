@@ -1,11 +1,28 @@
+:root {
+  /* タイマーの高さをここで調整（必要なら値を変更） */
+  --timer-height: 80px;
+}
+
 .flame{
-    padding: 20px 20px;
+    /* タイマーを上部に固定するヘッダーに変更 */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: var(--timer-height);
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background-color: red;
     color: white;
-    position: fixed;     /* 画面に対して固定位置 */
-    top: 0;              /* 上端に配置 */
-    left: 0;             /* 左端に配置 */
-    margin: 10px;        /* 端から少し余白を取る（任意） */
-    z-index: 3;       /* 他の要素より前面に表示（必要に応じて） */
+    z-index: 1000;
+    box-sizing: border-box;
+    padding: 8px;
+}
 
+/* タイマー内の文字サイズを調整 */
+.timeText {
+    font-size: 2.2rem; /* 必要に応じて調整 */
+    font-weight: 700;
+    line-height: 1;
 }

@@ -1,6 +1,7 @@
-import React from 'react'
+import React, {useCallback, useEffect} from 'react'
 import { useOrientation } from './useOrientation'; // 上記で作成したフックをインポート
 import { Unity, useUnityContext } from "react-unity-webgl";
+import useCapCanvasDPR from './useCapCanvasDPR';
 // H.T
 
 /**
@@ -41,12 +42,17 @@ const OrientationChecker = ({ children }) => {
 
 function Game3({scoreState, setScoreState , playState, setPlayState}) {
 
+  useCapCanvasDPR(2, 4096); // DPR を最大2に制限し、幅高さの上限を4096pxにする
   const { unityProvider, sendMessage, isLoaded } = useUnityContext({
-      loaderUrl: "/unity3/Build/unity1.loader.js",
-      dataUrl: "/unity3/Build/unity1.data",
-      frameworkUrl: "/unity3/Build/unity1.framework.js",
-      codeUrl: "/unity3/Build/unity1.wasm",
+      loaderUrl: "/unity3/Build/Downloads.loader.js",
+      dataUrl: "/unity3/Build/Downloads.data",
+      frameworkUrl: "/unity3/Build/Downloads.framework.js",
+      codeUrl: "/unity3/Build/Downloads.wasm",
   });
+
+  const BackButton = useCallback(() => {
+      setPlayState(playState = 0);
+  }, []); // 依存配列は空でOK
 
       // ゲームクリア後の"つぎへ"ボタン
   const ClearButton = useCallback(() => {
@@ -62,7 +68,7 @@ function Game3({scoreState, setScoreState , playState, setPlayState}) {
       return () => {
           delete window.NextButton;
       };
-  }, [ClearButton]);
+  }, [ClearButton, BackButton]);
 
   return (
     <OrientationChecker>

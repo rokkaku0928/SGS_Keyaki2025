@@ -2,10 +2,20 @@ function Intro2({introStep, setIntroStep }){
     return (
         <>
             <h1>intro2</h1>
-            <p>今回君たちにやってほしいことは二つだ</p>
-            <p>まず一つ、</p>
-            <p>私が事前につけたマークをボールを投げて壊してほしい</p>
-            <button onClick={() => setIntroStep(introStep + 1)} >つぎへ</button>
+            <p>
+                <ruby>
+                    今回
+                    <rt>こんかい</rt>
+                </ruby>
+                <ruby>
+                    君
+                    <rt>きみ</rt>
+                </ruby>たちにやってほしいことは二つだ
+            </p>
+            <p>まずは室内に入って話をしよう</p>
+            <p>受付のやつ？、、、あぁ気になったら話しとけ</p>
+            <p>黙って入ったとこでとっつかまりゃしねぇさｗｗ</p>
+            <button onClick={() => setIntroStep(introStep + 1)} >教室内へ入った</button>
             <button onClick={() => setIntroStep(introStep - 1)} >もどる</button>
         
         
