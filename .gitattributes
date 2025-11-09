@@ -1,2 +1,1 @@
-*.asset filter=lfs diff=lfs merge=lfs -text
-Keyaki_Test/Assets/Fonts/*.asset filter=lfs diff=lfs merge=lfs -text
+*.wasm filter=lfs diff=lfs merge=lfs -text

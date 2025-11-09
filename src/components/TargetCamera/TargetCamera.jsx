@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from 'react';
 import styles from "./TargetCamera.module.css";
-import { useNavigate } from 'react-router-dom';
 import jsQR from "jsqr";
 
 function TargetCamera({playState, setPlayState }) {
@@ -75,6 +74,9 @@ function TargetCamera({playState, setPlayState }) {
                   break;
                 case 'game-4':
                   setPlayState(4);
+                  break;
+                case 'game-5':
+                  setPlayState(5);
                   break;
                 default:
                   break;
