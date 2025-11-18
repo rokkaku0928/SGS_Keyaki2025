@@ -15,12 +15,12 @@ import Game2 from './components/Games/Game2'
 import Game3 from './components/Games/Game3'
 import Game4 from './components/Games/Game4';
 import Game5 from './components/Games/Game5';
+import Game7 from './components/Games/Game7';
 import GameOver from './components/Games/GameOver'
 import TargetCamera from './components/TargetCamera/TargetCamera';
 import Timer from './components/Timer/Timer';
 import Score from './components/Score/Score'
 import EndScreen from './pages/EndScreen';
-import Game7 from './components/Games/Game7';
 
 
 
