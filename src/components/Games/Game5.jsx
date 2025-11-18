@@ -45,10 +45,10 @@ function Game5({scoreState, setScoreState , playState, setPlayState}) {
     useCapCanvasDPR(2, 4096); // DPR を最大2に制限し、幅高さの上限を4096pxにする
 
     const { unityProvider, loadingProgression, isLoaded } = useUnityContext({
-        loaderUrl: "/unity5/Build/Downloads.loader.js",
-        dataUrl: "/unity5/Build/Downloads.data",
-        frameworkUrl: "/unity5/Build/Downloads.framework.js",
-        codeUrl: "/unity5/Build/Downloads.wasm",
+        loaderUrl: "/unity5/Build/webgame.loader.js",
+        dataUrl: "/unity5/Build/webgame.data",
+        frameworkUrl: "/unity5/Build/webgame.framework.js",
+        codeUrl: "/unity5/Build/webgame.wasm",
     });
 
     const loadingPercentage = Math.round(loadingProgression * 100);

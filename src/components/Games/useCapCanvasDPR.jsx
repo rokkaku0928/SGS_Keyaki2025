@@ -10,8 +10,10 @@ export default function useCapCanvasDPR(cap = 2, maxPx = 4096) {
     const adjust = () => {
       const canvas = document.querySelector('canvas');
       if (!canvas) return;
-      const cw = canvas.clientWidth || canvas.width || 0;
-      const ch = canvas.clientHeight || canvas.height || 0;
+      // 親コンテナのサイズ（CSS上のサイズ）を使う
+      const rect = canvas.getBoundingClientRect();
+      const cw = Math.max(1, Math.round(rect.width));
+      const ch = Math.max(1, Math.round(rect.height));
       if (cw === 0 || ch === 0) return;
       const dpr = Math.min(window.devicePixelRatio || 1, cap);
       const targetW = Math.round(cw * dpr);
@@ -23,12 +25,15 @@ export default function useCapCanvasDPR(cap = 2, maxPx = 4096) {
         canvas.width = finalW;
         canvas.height = finalH;
       }
+      // CSS サイズは親コンテナに合わせておく（アスペクト比を保って縮小表示される）
+      canvas.style.width = `${cw}px`;
+      canvas.style.height = `${ch}px`;
     };
 
     // 最初とリサイズ時に調整
     adjust();
     window.addEventListener('resize', adjust);
-    // 少し遅らせて再調整（Unityロード直後のリサイズに備える）
+    // Unityロード直後の変化に備える
     const t = setTimeout(adjust, 500);
 
     return () => {

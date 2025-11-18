@@ -63,6 +63,7 @@ function Game3({scoreState, setScoreState , playState, setPlayState}) {
   useEffect(() => {
       // C#側で指定する関数名 'NextButton' で登録
       window.NextButton = ClearButton
+      window.BackButton = BackButton
 
       // コンポーネントが不要になったら登録解除（クリーンアップ）
       return () => {
