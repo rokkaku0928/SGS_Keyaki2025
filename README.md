@@ -12,9 +12,9 @@ Currently, two official plugins are available:
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
 
 # 使用上の注意
-このWebサイトに使われてるjsQRというQRコードを読み取るときにライブラリがhttpsの通信方式でしか作動しない関係でこのプログラムをローカルホストで立ち上げるには、自著署名証明書を作ってもらう必要がある。
+このWebサイトに使われてるjsQRというQRコードを読み取るときに使うライブラリがhttpsの通信方式でしか作動しない関係でこのプログラムをローカルホストで立ち上げるには、自著署名証明書を作ってもらう必要がある。
 ## 実行するコマンドの順序
-(コマンドはこのリポジトリが入ってるフォルダ内でやってね)
+(以下のコマンドはこのリポジトリが入ってるフォルダ内にターミナルで入ってその中で実行してね)
 
 1.choco install mkcert
 2.mkcert -install
