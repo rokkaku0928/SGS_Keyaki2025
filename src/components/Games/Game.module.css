@@ -9,6 +9,10 @@
   position: relative; /* 子要素の基準位置にする */
   overflow: hidden;
   box-sizing: border-box;
+
+  display: flex;            /* 中央に配置してキャンバスの高さに合わせる */
+  justify-content: center;
+  align-items: center;
 }
 
 /* Unityコンポーネント自体に適用 */
@@ -17,15 +21,20 @@
   height: 100%;
   max-width: 100%;
   max-height: 100%;
-  display: block;    /* inline 要素化を防ぐ */
-  image-rendering: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  box-sizing: border-box;
 }
 
 .unityCanvas canvas, canvas {
-  max-width: 100%;
-  max-height: 100%;
-  width: 100% !important;
-  height: 100% !important;
+  width: auto !important;      /* 横は自動（高さに合わせて縮尺） */
+  height: 100% !important;     /* 親コンテナの高さに合わせる（切り取り防止） */
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: contain;
+  display: block;
   box-sizing: border-box;
 }
 
