@@ -3,13 +3,13 @@ import { Unity, useUnityContext } from "react-unity-webgl";
 import styles from "./Game.module.css";
 
 
-function Game4({scoreState, setScoreState , playState, setPlayState}) {
+function Game6({scoreState, setScoreState , playState, setPlayState}) {
 
     const { unityProvider, loadingProgression, isLoaded } = useUnityContext({
-        loaderUrl: "/unity6/Build/KeyakiTest_build.loader.js",
-        dataUrl: "/unity6/Build/KeyakiTest_build.data",
-        frameworkUrl: "/unity6/Build/KeyakiTest_build.framework.js",
-        codeUrl: "/unity6/Build/KeyakiTest_build.wasm",
+        loaderUrl: "/unity6/Build/KeyakiTestver3_build.loader.js",
+        dataUrl: "/unity6/Build/KeyakiTestver3_build.data",
+        frameworkUrl: "/unity6/Build/KeyakiTestver3_build.framework.js",
+        codeUrl: "/unity6/Build/KeyakiTestver3_build.wasm",
     });
 
     const loadingPercentage = Math.round(loadingProgression * 100);
