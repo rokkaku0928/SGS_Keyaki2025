@@ -63,7 +63,7 @@ function App() {
           <Game3 scoreState={scoreState} setScoreState={setScoreState} setPlayState={setPlayState} playState={playState} />,
           <Game4 scoreState={scoreState} setScoreState={setScoreState} setPlayState={setPlayState} playState={playState} />,
           <Game5 scoreState={scoreState} setScoreState={setScoreState} setPlayState={setPlayState} playState={playState} />,
-          <Game6 scoreState={scoreState} setScoreState={setScoreState} setPlayState={setPlayState} playState={playState} />
+          <Game6 scoreState={scoreState} setScoreState={setScoreState} setPlayState={setPlayState} playState={playState} />,
           <Game7 scoreState={scoreState} setScoreState={setScoreState} setPlayState={setPlayState} playState={playState} />,
         ];
         return (
