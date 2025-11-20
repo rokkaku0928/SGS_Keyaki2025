@@ -13,8 +13,8 @@ const PortraitWarning = () => (
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    width: '100vw',
-    height: '100vh',
+    width: '80vw',
+    height: '80vh',
     textAlign: 'center',
     backgroundColor: '#333',
     color: 'white'
