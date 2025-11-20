@@ -51,3 +51,22 @@
   justify-content: center;
   align-items: center;
 }
+
+.portraitScale {
+  transform: scale(1);      /* ← 縦画面に収める縮小率 */
+  transform-origin: top center;
+}
+
+.portraitWrapper {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.portraitScale canvas {
+  width: 100% !important;      /* 横幅を枠に合わせる */
+  height: auto !important;     /* 高さは比率で計算される */
+}
