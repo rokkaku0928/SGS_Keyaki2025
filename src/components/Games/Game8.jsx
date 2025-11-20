@@ -44,10 +44,10 @@ function Game3({scoreState, setScoreState , playState, setPlayState}) {
 
   useCapCanvasDPR(2, 4096); // DPR を最大2に制限し、幅高さの上限を4096pxにする
   const { unityProvider, sendMessage, isLoaded } = useUnityContext({
-      loaderUrl: "/unity8/Build/BallonShootver2_build.loader.js",
-      dataUrl: "/unity8/Build/BallonShootver2_build.data",
-      frameworkUrl: "/unity8/Build/BallonShootver2_build.framework.js",
-      codeUrl: "/unity8/Build/BallonShootver2_build.wasm",
+      loaderUrl: "/unity8/Build/BallonShootver3_build.loader.js",
+      dataUrl: "/unity8/Build/BallonShootver3_build.data",
+      frameworkUrl: "/unity8/Build/BallonShootver3_build.framework.js",
+      codeUrl: "/unity8/Build/BallonShootver3_build.wasm",
   });
 
   const BackButton = useCallback(() => {
