@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import { Unity, useUnityContext } from "react-unity-webgl";
 import styles from "./Game.module.css";
 
@@ -10,36 +10,46 @@ function Game4({ scoreState, setScoreState, playState, setPlayState }) {
         codeUrl: "/unity4/Build/Gamedayo.wasm",
     });
 
-    // --- Unity破棄後にスコア加算 ---
+    // 再生成フラグで安全に Unity を再レンダリング
+    const [reloadFlag, setReloadFlag] = useState(false);
+
     const ClearButton = useCallback(async () => {
         try {
-            await unload(); // 完全破棄を待つ
-            console.log("[Game4] unload 完了");
+            await unload();
 
-            // スマホ用クールダウン
+            // Canvas を削除してメモリ解放
+            const canvas = document.querySelector("canvas");
+            if (canvas) canvas.remove();
+
+            // Safari 用クールダウン
             setTimeout(() => {
                 setScoreState(prev => prev + 1);
                 setPlayState(0);
-            }, 300); // 短めの遅延
+                // 再レンダリングフラグを更新して新しい Unity を生成
+                setReloadFlag(prev => !prev);
+            }, 300);
+
         } catch (e) {
             console.warn("[Game4] unload failed", e);
         }
     }, [unload, setScoreState, setPlayState]);
 
-    // --- Unity破棄後に戻るだけ ---
     const BackButton = useCallback(async () => {
         try {
             await unload();
+
+            const canvas = document.querySelector("canvas");
+            if (canvas) canvas.remove();
+
+            setTimeout(() => {
+                setPlayState(0);
+                setReloadFlag(prev => !prev);
+            }, 300);
         } catch (e) {
             console.warn("[Game4] unload failed", e);
         }
-
-        setTimeout(() => {
-            setPlayState(0);
-        }, 300);
     }, [unload, setPlayState]);
 
-    // --- Unity → JS のボタン登録 ---
     useEffect(() => {
         window.NextButton = ClearButton;
         window.BackButton = BackButton;
@@ -58,9 +68,9 @@ function Game4({ scoreState, setScoreState, playState, setPlayState }) {
                 </div>
             )}
 
-            {/* playState が 1 のときのみ Unity 表示 */}
-            {playState !== 0 && (
+            {playState !== 0 && reloadFlag !== null && (
                 <Unity
+                    key={reloadFlag} // key を変えることで新しい Unity を生成
                     unityProvider={unityProvider}
                     className={styles.unityCanvas}
                 />
