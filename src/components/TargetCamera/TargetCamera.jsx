@@ -85,7 +85,7 @@ function TargetCamera({playState, setPlayState }) {
                   setPlayState(7);
                   break;
                 case 'game-8':
-                  setPlayState(7);
+                  setPlayState(8);
                   break;
                 default:
                   break;
