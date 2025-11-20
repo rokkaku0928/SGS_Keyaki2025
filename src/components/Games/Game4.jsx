@@ -1,4 +1,4 @@
-import React ,{ useEffect, useCallback, useState } from 'react'
+import React, { useEffect, useCallback } from 'react';
 import { Unity, useUnityContext } from "react-unity-webgl";
 import styles from "./Game.module.css";
 
@@ -11,19 +11,41 @@ function Game4({ scoreState, setScoreState, playState, setPlayState }) {
         codeUrl: "/unity4/Build/Gamedayo.wasm",
     });
 
-    const [isDisposed, setIsDisposed] = useState(false);
+    const ClearButton = useCallback(async () => {
 
-    // ---- ボタン ----
-    const BackButton = useCallback(() => {
-        setPlayState(0);
-    }, []);
+        // ---- Unity を完全破棄 ----
+        try {
+            await unload();
+            console.log("[Game4] unload 完了");
+        } catch (e) {
+            console.warn("[Game4] unload failed", e);
+        }
 
-    const ClearButton = useCallback(() => {
-        setScoreState(scoreState + 1);
-        setPlayState(0);
-    }, []);
+        // ---- スマホ用クールダウン（重要） ----
+        setTimeout(() => {
+            setScoreState(scoreState + 1);
+            setPlayState(0);
+        }, 1500);
 
-    // ---- Unity → JS の橋渡し ----
+    }, [unload, scoreState, setScoreState, setPlayState]);
+
+
+    const BackButton = useCallback(async () => {
+
+        try {
+            await unload();
+        } catch (e) {
+            console.warn("[Game4] unload failed", e);
+        }
+
+        setTimeout(() => {
+            setPlayState(0);
+        }, 1500);
+
+    }, [unload, setPlayState]);
+
+
+    // Unity → JS の登録
     useEffect(() => {
         window.NextButton = ClearButton;
         window.BackButton = BackButton;
@@ -34,35 +56,19 @@ function Game4({ scoreState, setScoreState, playState, setPlayState }) {
         };
     }, [ClearButton, BackButton]);
 
-    // ---- 🔥 ここ追加：Unity インスタンス破棄 + 待機 ----
-    useEffect(() => {
-        return () => {
-            const dispose = async () => {
-                try {
-                    await unload();      // Unity を破棄
-                    setIsDisposed(true); // 完全破棄された
-                } catch (e) {
-                    console.warn("unload failed:", e);
-                }
-            };
-            dispose();
-        };
-    }, [unload]);
 
-    // Unity が破棄されるまで待つ
-    if (!isDisposed && playState === 0) {
-        return <div className={styles.loadingOverlay}>終了処理中…</div>;
-    }
-
-    // ---- Unity 本体 ----
     return (
         <div className={styles.gameContainer}>
-            {!isLoaded && 
+            {!isLoaded && (
                 <div className={styles.loadingOverlay}>
                     <p>読み込み中... ({Math.round(loadingProgression * 100)}%)</p>
                 </div>
-            }
-            <Unity unityProvider={unityProvider} className={styles.unityCanvas} />
+            )}
+
+            <Unity
+                unityProvider={unityProvider}
+                className={styles.unityCanvas}
+            />
         </div>
     );
 }
