@@ -8,41 +8,9 @@ import useCapCanvasDPR from './useCapCanvasDPR';
 /**
  * 縦画面時に表示する警告コンポーネント
  */
-const PortraitWarning = () => (
-  <div style={{
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100vw',
-    height: '100vh',
-    textAlign: 'center',
-    backgroundColor: '#333',
-    color: 'white'
-  }}>
-    <h1>横画面にしてください</h1>
-  </div>
-);
 
-const OrientationChecker = ({ children }) => {
-    const orientation = useOrientation();
-
-    // 1. 向きがまだ判定できていない場合 (初回レンダリング時)
-    //    ハイドレーションエラーを防ぐため、何も表示しない (null を返す)
-    if (orientation === null) {
-        return null;
-    }
-
-    // 2. 縦画面の場合
-    if (orientation === 'portrait') {
-        return <PortraitWarning />;
-    }
-
-    // 3. 横画面の場合 (children を表示)
-    return <>{children}</>;
-};
 
 function Game5({scoreState, setScoreState , playState, setPlayState}) {
-    useCapCanvasDPR(2, 4096); // DPR を最大2に制限し、幅高さの上限を4096pxにする
 
     const { unityProvider, loadingProgression, isLoaded } = useUnityContext({
         loaderUrl: "/unity5/Build/webgame.loader.js",
@@ -79,7 +47,7 @@ function Game5({scoreState, setScoreState , playState, setPlayState}) {
 
     
     return (
-        <OrientationChecker>
+        <div className={styles.gameContainer}>
             {isLoaded === false && (
                 // We'll conditionally render the loading overlay if the Unity
                 // Application is not loaded.
@@ -91,8 +59,9 @@ function Game5({scoreState, setScoreState , playState, setPlayState}) {
 
             <Unity
                 unityProvider={unityProvider}
+                className={styles.unityCanvas}
             />
-        </OrientationChecker>
+        </div>
     )
 }
 
