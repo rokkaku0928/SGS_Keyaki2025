@@ -9,11 +9,12 @@ function Timer(props) {
     // Limit＿Timeが制限時間を定義してる
     const Limit_Time = 240000;
     const [timerCount, setTimerCount] = useState(Limit_Time);
-    const [timerState,setTimerState] = useState('active');
     const timerIdRef = useRef(null);
     const {
         gameState,
-        setGameState
+        setGameState,
+        timerState,
+        setTimerState
     } = props;
     
     useEffect(() => {
@@ -47,10 +48,14 @@ function Timer(props) {
         return [mm,ss].map((val)=>String(val)).join(':')
     }
 
+    const currentStyle = timerState
+        ? `${styles.timerContainer} ${styles.floatingStyle}` 
+        : `${styles.timerContainer} ${styles.headerStyle}`;
+
     return(
-        <>
-            <a className={styles.flame}><font size="9">{Format(timerCount)}</font></a>
-        </>
+        <div className={currentStyle}>
+            {Format(timerCount)}
+        </div>
     )
 }
 

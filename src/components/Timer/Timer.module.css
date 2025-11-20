@@ -1,28 +1,40 @@
 :root {
-  /* タイマーの高さをここで調整（必要なら値を変更） */
   --timer-height: 80px;
 }
 
-.flame{
-    /* タイマーを上部に固定するヘッダーに変更 */
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: var(--timer-height);
+/* 共通のスタイル（文字サイズやフォントなど） */
+.timerContainer {
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: red;
     color: white;
+    font-weight: 700;
     z-index: 1000;
     box-sizing: border-box;
+    /* fontタグの代わりにCSSでサイズ指定推奨 */
+    font-size: 2.2rem; 
+}
+
+/* モードA: 今までのスタイル（上部全体） */
+.headerStyle {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: var(--timer-height);
     padding: 8px;
 }
 
-/* タイマー内の文字サイズを調整 */
-.timeText {
-    font-size: 2.2rem; /* 必要に応じて調整 */
-    font-weight: 700;
-    line-height: 1;
+/* モードB: 今回追加するゲーム画面用のスタイル（左上固定） */
+.floatingStyle {
+    position: fixed;
+    top: 0;
+    left: 0;
+    margin: 10px;
+    padding: 10px 20px; /* 上下10px 左右20px (少し調整しました) */
+    border-radius: 10px; /* 角を丸くしてボタンっぽく見やすく */
+    width: auto;         /* 横幅をなりゆきに */
+    height: auto;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3); /* 視認性を上げるための影 */
 }
