@@ -15,12 +15,15 @@ import Game2 from './components/Games/Game2'
 import Game3 from './components/Games/Game3'
 import Game4 from './components/Games/Game4';
 import Game5 from './components/Games/Game5';
+import Game6 from './components/Games/Game6';
 import Game7 from './components/Games/Game7';
+import Game8 from './components/Games/Game8';
 import GameOver from './components/Games/GameOver'
 import TargetCamera from './components/TargetCamera/TargetCamera';
 import Timer from './components/Timer/Timer';
 import Score from './components/Score/Score'
 import EndScreen from './pages/EndScreen';
+
 
 
 
@@ -67,8 +70,9 @@ function App() {
           <Game3 scoreState={scoreState} setScoreState={setScoreState} setPlayState={setPlayState} playState={playState} />,
           <Game4 scoreState={scoreState} setScoreState={setScoreState} setPlayState={setPlayState} playState={playState} />,
           <Game5 scoreState={scoreState} setScoreState={setScoreState} setPlayState={setPlayState} playState={playState} />,
-          <Game5 scoreState={scoreState} setScoreState={setScoreState} setPlayState={setPlayState} playState={playState} />,
+          <Game6 scoreState={scoreState} setScoreState={setScoreState} setPlayState={setPlayState} playState={playState} />,
           <Game7 scoreState={scoreState} setScoreState={setScoreState} setPlayState={setPlayState} playState={playState} />,
+          <Game8 scoreState={scoreState} setScoreState={setScoreState} setPlayState={setPlayState} playState={playState} />,
         ];
         return (
           <>
