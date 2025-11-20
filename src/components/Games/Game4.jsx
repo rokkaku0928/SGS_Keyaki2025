@@ -1,37 +1,29 @@
-import React, { useEffect, useCallback } from 'react'
+import React ,{ useEffect, useCallback, useState } from 'react'
 import { Unity, useUnityContext } from "react-unity-webgl";
 import styles from "./Game.module.css";
-// Tusk
 
 function Game4({ scoreState, setScoreState, playState, setPlayState }) {
 
-    const {
-        unityProvider,
-        loadingProgression,
-        isLoaded,
-        unload      // ← これを取得
-    } = useUnityContext({
+    const { unityProvider, loadingProgression, isLoaded, unload } = useUnityContext({
         loaderUrl: "/unity4/Build/Gamedayo.loader.js",
         dataUrl: "/unity4/Build/Gamedayo.data",
         frameworkUrl: "/unity4/Build/Gamedayo.framework.js",
         codeUrl: "/unity4/Build/Gamedayo.wasm",
     });
 
-    const loadingPercentage = Math.round(loadingProgression * 100);
+    const [isDisposed, setIsDisposed] = useState(false);
 
-    // もどるボタン
+    // ---- ボタン ----
     const BackButton = useCallback(() => {
         setPlayState(0);
-        unload();              // ← Unity を即アンロード
     }, []);
 
-    // クリア後のつぎへ
     const ClearButton = useCallback(() => {
         setScoreState(scoreState + 1);
         setPlayState(0);
-        unload();              // ← Unity を即アンロード
     }, []);
 
+    // ---- Unity → JS の橋渡し ----
     useEffect(() => {
         window.NextButton = ClearButton;
         window.BackButton = BackButton;
@@ -39,26 +31,40 @@ function Game4({ scoreState, setScoreState, playState, setPlayState }) {
         return () => {
             delete window.NextButton;
             delete window.BackButton;
-
-            // ページ離脱時にも破棄（保険）
-            if (unload) unload();
         };
-    }, [ClearButton, BackButton, unload]);
+    }, [ClearButton, BackButton]);
 
+    // ---- 🔥 ここ追加：Unity インスタンス破棄 + 待機 ----
+    useEffect(() => {
+        return () => {
+            const dispose = async () => {
+                try {
+                    await unload();      // Unity を破棄
+                    setIsDisposed(true); // 完全破棄された
+                } catch (e) {
+                    console.warn("unload failed:", e);
+                }
+            };
+            dispose();
+        };
+    }, [unload]);
+
+    // Unity が破棄されるまで待つ
+    if (!isDisposed && playState === 0) {
+        return <div className={styles.loadingOverlay}>終了処理中…</div>;
+    }
+
+    // ---- Unity 本体 ----
     return (
         <div className={styles.gameContainer}>
-            {isLoaded === false && (
+            {!isLoaded && 
                 <div className={styles.loadingOverlay}>
-                    <p>読み込み中... ({loadingPercentage}%)</p>
+                    <p>読み込み中... ({Math.round(loadingProgression * 100)}%)</p>
                 </div>
-            )}
-
-            <Unity
-                unityProvider={unityProvider}
-                className={styles.unityCanvas}
-            />
+            }
+            <Unity unityProvider={unityProvider} className={styles.unityCanvas} />
         </div>
-    )
+    );
 }
 
 export default Game4;
