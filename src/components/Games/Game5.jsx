@@ -79,22 +79,20 @@ function Game5({scoreState, setScoreState , playState, setPlayState}) {
 
     
     return (
-        <div className={styles.gameContainer}>
-            <OrientationChecker>
-                {isLoaded === false && (
-                    // We'll conditionally render the loading overlay if the Unity
-                    // Application is not loaded.
-                    <div className={styles.loadingOverlay}>
-                        <p>読み込み中... ({loadingPercentage}%)</p>
-                    </div>
-                )}
+        <OrientationChecker>
+            {isLoaded === false && (
+                // We'll conditionally render the loading overlay if the Unity
+                // Application is not loaded.
+                <div className={styles.loadingOverlay}>
+                    <p>読み込み中... ({loadingPercentage}%)</p>
+                </div>
+            )}
 
 
-                <Unity
-                    unityProvider={unityProvider}
-                />
-            </OrientationChecker>
-        </ div>
+            <Unity
+                unityProvider={unityProvider}
+            />
+        </OrientationChecker>
     )
 }
 

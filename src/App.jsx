@@ -30,14 +30,19 @@ import EndScreen from './pages/EndScreen';
 function App() {
 
   const [gameState, setGameState] = useState('Intro');
-  const [scoreState, setScoreState] = useState(7);
+  const [scoreState, setScoreState] = useState(0);
   const [introStep, setIntroStep] = useState(0);
+  const [timerState, setTimerState] = useState(false);
   // playStateは何の電子ゲームをやってるか？という処理と
   // 電子ゲームかカメラか？という処理を兼ねている
   // playStateが０ならカメラ、その他n（何らかの数字）
   // だったらn番目のゲーム
   const [playState, setPlayState] = useState(0);
   const totalKeys = 10; // 鍵の総数
+  useEffect(() => {
+    // ここでは playState - 1 === 0 のときに timerState を true にする（必要なら条件を調整）
+    setTimerState(playState - 1 === 0);
+  }, [playState, setTimerState]);
 
   const renderContent = () => {
     switch (gameState) {
@@ -72,7 +77,7 @@ function App() {
         return (
           <>
             
-            <Timer gameState={gameState} setGameState={setGameState}/>
+            <Timer gameState={gameState} setGameState={setGameState} timerState={timerState} setTimerState={setTimerState}/>
             {playState === 0 ? (
               <div className="grid grid-rows-2 h-full w-full">
                 <div className="row-span-1">
