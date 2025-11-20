@@ -28,9 +28,9 @@ function Game2({scoreState, setScoreState , playState, setPlayState}) {
         return () => {
             delete window.NextButton;
 
-            // ★ Unity の WebGL メモリを完全解放する
+            // 勝手にいじりました、デバックした感じは大丈夫そうです
             try {
-                unload();     // ← ← ← ここが超重要
+                unload();
             } catch(e) {
                 console.warn("unload failed", e);
             }
