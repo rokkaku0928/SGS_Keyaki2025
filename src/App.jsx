@@ -1,5 +1,5 @@
 import './App.css'
-import React, { useState } from 'react';
+import React, {useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Intro1 from './pages/Intro1'
 import Intro2 from './pages/Intro2'
