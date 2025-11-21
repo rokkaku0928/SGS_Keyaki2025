@@ -40,11 +40,10 @@ function App() {
   const [playState, setPlayState] = useState(0);
   const totalKeys = 10; // 鍵の総数
   useEffect(() => {
-    // ここでは playState - 1 === 0 のときに timerState を true にする（必要なら条件を調整）
-    setTimerState(playState - 1 === 0);
-    setTimerState(playState - 1 === 2);
-    setTimerState(playState - 1 === 6);
-  }, [playState, setTimerState]);
+    // タイマーを「浮かせて表示」したいゲーム番号をここで定義
+    const floatingTimerGames = new Set([1, 3, 7]); // 必要に応じてゲーム番号を追加
+    setTimerState(floatingTimerGames.has(playState));
+  }, [playState]);
 
   const renderContent = () => {
     switch (gameState) {
