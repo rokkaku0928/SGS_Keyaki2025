@@ -1,59 +1,50 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { useOrientation } from './useOrientation';
-import { Unity, useUnityContext } from 'react-unity-webgl';
-import useCapCanvasDPR from './useCapCanvasDPR';
-import styles from './Game.module.css';
+import React, { useEffect, useState } from "react";
+import styles from "./Game.module.css";
 
 function Game8({ scoreState, setScoreState, playState, setPlayState }) {
 
-  const isPortrait = true;
-
-  useCapCanvasDPR(2, 4096);
-
-  const { unityProvider, loadingProgression, isLoaded, unload } = useUnityContext({
-    loaderUrl: "/unity8/Build/BallonShootver4_build.loader.js",
-    dataUrl: "/unity8/Build/BallonShootver4_build.data",
-    frameworkUrl: "/unity8/Build/BallonShootver4_build.framework.js",
-    codeUrl: "/unity8/Build/BallonShootver4_build.wasm",
-  });
-
-  const loadingPercentage = Math.round(loadingProgression * 100);
-
+  const [showFrame, setShowFrame] = useState(true);
+  // Unity → React のメッセージを受け取る（BackButton / NextButton）
   useEffect(() => {
-    window.NextButton = () => {
-      setScoreState(prev => prev + 1);
-      setPlayState(0);
-    };
-    window.BackButton = () => setPlayState(0);
+    function handleMessage(event) {
+      if (!event.data || typeof event.data !== "object") return;
+
+      // ★ iframe を消す（＝WebGL を破棄）
+        const destroyIframe = () => {
+        console.log("[Game8] iframe を削除して WebGL を破棄します");
+        setShowFrame(false);  // ← DOM から削除される
+        };
+      
+      if (event.data.type === "BackButton") {
+        destroyIframe();
+        setPlayState(0);
+      }
+
+      if (event.data.type === "NextButton") {
+        destroyIframe();
+        setScoreState(prev => prev + 1);
+        setPlayState(0);
+      }
+    }
+
+    window.addEventListener("message", handleMessage);
 
     return () => {
-      delete window.NextButton;
-      delete window.BackButton;
-
-      unload();
+      window.removeEventListener("message", handleMessage);
     };
   }, []);
 
-
   return (
-    <>
-      {/* ① portraitWrapper を縦向きのときだけ追加 */}
-      <div className={`${styles.gameContainer} ${isPortrait ? styles.portraitWrapper : ""}`}>
-        
-        {isLoaded === false && (
-          <div className={styles.loadingOverlay}>
-            <p>読み込み中... ({loadingPercentage}%)</p>
-          </div>
-        )}
-        
-        {/* ② Unity に portraitScale を縦向きだけ追加 */}
-        <Unity
-          unityProvider={unityProvider}
-          className={`${styles.unityCanvas} ${isPortrait ? styles.portraitScale : ""}`}
-        />
-
-      </div>
-    </>
+    <div className={styles.WidegameContainer}>
+      {/* iframe で Unity WebGL を読み込む */}
+      <iframe
+        key="unity8"
+        src="/unity8/index.html"        // ← Unity のビルドフォルダ内 index.html
+        className={styles.WideCanvas}
+        title="UnityGame8"
+        allow="autoplay; fullscreen"
+      />
+    </div>
   );
 }
 
