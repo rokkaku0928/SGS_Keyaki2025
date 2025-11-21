@@ -1,51 +1,65 @@
-import React, { useCallback, useEffect } from 'react';
-import { useOrientation } from './useOrientation';
-import { Unity, useUnityContext } from 'react-unity-webgl';
-import useCapCanvasDPR from './useCapCanvasDPR';
-import styles from './Game.module.css';
+import React ,{  useEffect, useCallback } from 'react'
+import { Unity, useUnityContext } from "react-unity-webgl";
+import styles from "./Game.module.css";
+// Tusk
 
-function Game3({ scoreState, setScoreState, playState, setPlayState }) {
-  const orientation = useOrientation();
-  const isPortrait = orientation === "portrait";
+function Game5({scoreState, setScoreState , playState, setPlayState}) {
 
-  useCapCanvasDPR(2, 4096);
+    const { unityProvider, loadingProgression, isLoaded, unload } = useUnityContext({
+        loaderUrl: "/unity5/Build/webgame.loader.js",
+        dataUrl: "/unity5/Build/webgame.data",
+        frameworkUrl: "/unity5/Build/webgame.framework.js",
+        codeUrl: "/unity5/Build/webgame.wasm",
+    });
 
-  const { unityProvider } = useUnityContext({
-    loaderUrl: "/unity5/Build/.loader.js",
-    dataUrl: "/unity3/Build/Downloads.data",
-    frameworkUrl: "/unity3/Build/Downloads.framework.js",
-    codeUrl: "/unity3/Build/Downloads.wasm",
-  });
+    const loadingPercentage = Math.round(loadingProgression * 100);
 
-  useEffect(() => {
-    window.NextButton = () => {
-      setScoreState(prev => prev + 1);
-      setPlayState(0);
-    };
-    window.BackButton = () => setPlayState(0);
+    // ゲーム中の"もどる"ボタン
+    const BackButton = useCallback(() => {
+        setPlayState(playState = 0);
+    }, []); // 依存配列は空でOK
 
-    return () => {
-      delete window.NextButton;
-      delete window.BackButton;
-    };
-  }, []);
+    // ゲームクリア後の"つぎへ"ボタン
+    const ClearButton = useCallback(() => {
+        setScoreState(scoreState + 1);
+        setPlayState(playState = 0);
+    }, []); // 依存配列は空でOK
 
-  if (orientation === null) return null;
+    useEffect(() => {
+        // C#側で指定する関数名 'NextButton' で登録
+        window.NextButton = ClearButton
 
-  return (
-    <>
-      {/* ① portraitWrapper を縦向きのときだけ追加 */}
-      <div className={`${styles.gameContainer} ${isPortrait ? styles.portraitWrapper : ""}`}>
-        
-        {/* ② Unity に portraitScale を縦向きだけ追加 */}
-        <Unity
-          unityProvider={unityProvider}
-          className={`${styles.unityCanvas} ${isPortrait ? styles.portraitScale : ""}`}
-        />
+        window.BackButton = BackButton
 
-      </div>
-    </>
-  );
+        // コンポーネントが不要になったら登録解除（クリーンアップ）
+        return () => {
+            delete window.NextButton;
+            delete window.BackButton;
+
+            unload();
+        };
+    }, [ClearButton, BackButton]);
+
+    
+    return (
+        <div className={styles.gameContainer}>
+            {isLoaded === false && (
+                // We'll conditionally render the loading overlay if the Unity
+                // Application is not loaded.
+                <div className={styles.loadingOverlay}>
+                    <p>読み込み中... ({loadingPercentage}%)</p>
+                </div>
+            )}
+                    
+
+
+            <Unity 
+                unityProvider={unityProvider}
+                className={styles.unityCanvas}
+            />
+        </ div>
+    )
 }
 
-export default Game3;
+export default Game5
+

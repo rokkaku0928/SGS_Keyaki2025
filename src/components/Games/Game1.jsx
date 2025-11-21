@@ -1,11 +1,11 @@
-import React ,{  useEffect, useCallback } from 'react'
+import React ,{  useEffect, useCallback} from 'react'
 import { Unity, useUnityContext } from "react-unity-webgl";
 import styles from "./Game.module.css";
 // K.S
 
 function Game1({scoreState, setScoreState , playState, setPlayState}) {
 
-    const { unityProvider, loadingProgression, isLoaded } = useUnityContext({
+    const { unityProvider, loadingProgression, isLoaded, unload } = useUnityContext({
         loaderUrl: "/unity1/Build/unity1.loader.js",
         dataUrl: "/unity1/Build/unity1.data",
         frameworkUrl: "/unity1/Build/unity1.framework.js",
@@ -35,6 +35,9 @@ function Game1({scoreState, setScoreState , playState, setPlayState}) {
         return () => {
             delete window.NextButton;
             delete window.BackButton;
+
+            // 🟥 Unity WebGL メモリ完全解放
+            unload();
         };
     }, [ClearButton, BackButton]);
 

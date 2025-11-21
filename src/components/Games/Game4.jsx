@@ -5,7 +5,7 @@ import styles from "./Game.module.css";
 
 function Game4({scoreState, setScoreState , playState, setPlayState}) {
 
-    const { unityProvider, loadingProgression, isLoaded } = useUnityContext({
+    const { unityProvider, loadingProgression, isLoaded, unload } = useUnityContext({
         loaderUrl: "/unity4/Build/Gamedayo.loader.js",
         dataUrl: "/unity4/Build/Gamedayo.data",
         frameworkUrl: "/unity4/Build/Gamedayo.framework.js",
@@ -35,6 +35,8 @@ function Game4({scoreState, setScoreState , playState, setPlayState}) {
         return () => {
             delete window.NextButton;
             delete window.BackButton;
+
+            unload();
         };
     }, [ClearButton, BackButton]);
 

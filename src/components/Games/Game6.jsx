@@ -5,7 +5,7 @@ import styles from "./Game.module.css";
 
 function Game6({scoreState, setScoreState , playState, setPlayState}) {
 
-    const { unityProvider, loadingProgression, isLoaded } = useUnityContext({
+    const { unityProvider, loadingProgression, isLoaded, unload } = useUnityContext({
         loaderUrl: "/unity6/Build/KeyakiTestver3_build.loader.js",
         dataUrl: "/unity6/Build/KeyakiTestver3_build.data",
         frameworkUrl: "/unity6/Build/KeyakiTestver3_build.framework.js",
@@ -35,6 +35,8 @@ function Game6({scoreState, setScoreState , playState, setPlayState}) {
         return () => {
             delete window.NextButton;
             delete window.BackButton;
+
+            unload();
         };
     }, [ClearButton, BackButton]);
 

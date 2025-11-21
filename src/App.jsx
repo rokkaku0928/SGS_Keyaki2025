@@ -42,6 +42,7 @@ function App() {
   useEffect(() => {
     // ここでは playState - 1 === 0 のときに timerState を true にする（必要なら条件を調整）
     setTimerState(playState - 1 === 0);
+    setTimerState(playState - 1 === 6);
   }, [playState, setTimerState]);
 
   const renderContent = () => {

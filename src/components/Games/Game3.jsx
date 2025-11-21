@@ -1,21 +1,21 @@
-import React, { useCallback, useEffect } from 'react';
-import { useOrientation } from './useOrientation';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Unity, useUnityContext } from 'react-unity-webgl';
 import useCapCanvasDPR from './useCapCanvasDPR';
 import styles from './Game.module.css';
 
 function Game3({ scoreState, setScoreState, playState, setPlayState }) {
-  const orientation = useOrientation();
-  const isPortrait = orientation === "portrait";
 
+  const isPortrait = true;
   useCapCanvasDPR(2, 4096);
 
-  const { unityProvider } = useUnityContext({
+  const { unityProvider, loadingProgression, isLoaded, unload } = useUnityContext({
     loaderUrl: "/unity3/Build/Downloads.loader.js",
     dataUrl: "/unity3/Build/Downloads.data",
     frameworkUrl: "/unity3/Build/Downloads.framework.js",
     codeUrl: "/unity3/Build/Downloads.wasm",
   });
+
+  const loadingPercentage = Math.round(loadingProgression * 100);
 
   useEffect(() => {
     window.NextButton = () => {
@@ -27,17 +27,23 @@ function Game3({ scoreState, setScoreState, playState, setPlayState }) {
     return () => {
       delete window.NextButton;
       delete window.BackButton;
+
+      unload();
     };
   }, []);
 
-  if (orientation === null) return null;
-
   return (
     <>
-      {/* ① portraitWrapper を縦向きのときだけ追加 */}
-      <div className={`${styles.gameContainer} ${isPortrait ? styles.portraitWrapper : ""}`}>
-        
-        {/* ② Unity に portraitScale を縦向きだけ追加 */}
+      <div
+        className={`${styles.gameContainer} ${isPortrait ? styles.portraitWrapper : ""}`}
+      >
+
+        {isLoaded === false && (
+          <div className={styles.loadingOverlay}>
+            <p>読み込み中... ({loadingPercentage}%)</p>
+          </div>
+        )}
+
         <Unity
           unityProvider={unityProvider}
           className={`${styles.unityCanvas} ${isPortrait ? styles.portraitScale : ""}`}
@@ -49,4 +55,5 @@ function Game3({ scoreState, setScoreState, playState, setPlayState }) {
 }
 
 export default Game3;
+
 

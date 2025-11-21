@@ -1,10 +1,10 @@
-import React ,{  useEffect, useCallback } from 'react'
+import React ,{  useEffect, useCallback} from 'react'
 import { Unity, useUnityContext } from "react-unity-webgl";
 import styles from "./Game.module.css";
 // S.Y
 
 function Game2({scoreState, setScoreState , playState, setPlayState}) {
-    const { unityProvider, loadingProgression, isLoaded } = useUnityContext({
+    const { unityProvider, loadingProgression, isLoaded, unload } = useUnityContext({
         loaderUrl: "/unity2/Build/DoorGame_2.loader.js",
         dataUrl: "/unity2/Build/DoorGame_2.data",
         frameworkUrl: "/unity2/Build/DoorGame_2.framework.js",
@@ -25,6 +25,8 @@ function Game2({scoreState, setScoreState , playState, setPlayState}) {
         // コンポーネントが不要になったら登録解除（クリーンアップ）
         return () => {
             delete window.NextButton;
+            // 🟥 Unity WebGL メモリ完全解放
+            unload();
         };
     }, [ClearButton]);
 
