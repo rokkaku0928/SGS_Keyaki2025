@@ -7,7 +7,7 @@ const ONE_SECONDS = 1000;
 
 function Timer(props) {
     // Limit＿Timeが制限時間を定義してる
-    const Limit_Time = 240000;
+    const Limit_Time = 360000;
     const [timerCount, setTimerCount] = useState(Limit_Time);
     const timerIdRef = useRef(null);
     const {
