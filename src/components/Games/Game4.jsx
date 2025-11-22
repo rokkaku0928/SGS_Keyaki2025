@@ -36,14 +36,16 @@ function Game4({ scoreState, setScoreState, playState, setPlayState }) {
 
   return (
     <div className={styles.gameContainer}>
-      {/* iframe で Unity WebGL を読み込む */}
+          {/* iframe で Unity WebGL を読み込む */}
+          {showFrame && (
           <iframe
               key="unity4"
               src="/unity4/index.html"        // ← Unity のビルドフォルダ内 index.html
               className={styles.unityCanvas}
               title="UnityGame4"
               allow="autoplay; fullscreen"
-          />
+              />
+              )}
     </div>
   );
 }

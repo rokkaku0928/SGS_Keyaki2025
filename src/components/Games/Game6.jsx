@@ -35,17 +35,19 @@ function Game6({ scoreState, setScoreState, playState, setPlayState }) {
   }, []);
 
   return (
-    <div className={styles.gameContainer}>
-      {/* iframe で Unity WebGL を読み込む */}
-          <iframe
-              key="unity6"
-              src="/unity6/index.html"        // ← Unity のビルドフォルダ内 index.html
-              className={styles.unityCanvas}
-              title="UnityGame6"
-              allow="autoplay; fullscreen"
-          />
-    </div>
-  );
+  <div className={styles.gameContainer}>
+    {showFrame && (
+      <iframe
+        key="unity6"
+        src="/unity6/index.html"
+        className={styles.unityCanvas}
+        title="UnityGame6"
+        allow="autoplay; fullscreen"
+      />
+    )}
+  </div>
+);
+
 }
 
 export default Game6;

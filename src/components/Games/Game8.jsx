@@ -37,13 +37,15 @@ function Game8({ scoreState, setScoreState, playState, setPlayState }) {
   return (
     <div className={styles.WidegameContainer}>
       {/* iframe で Unity WebGL を読み込む */}
+      {showFrame && (
       <iframe
         key="unity8"
         src="/unity8/index.html"        // ← Unity のビルドフォルダ内 index.html
         className={styles.WideCanvas}
         title="UnityGame8"
         allow="autoplay; fullscreen"
-      />
+        />
+        )}
     </div>
   );
 }
