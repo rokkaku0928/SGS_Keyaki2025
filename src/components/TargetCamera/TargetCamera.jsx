@@ -11,9 +11,9 @@ function TargetCamera({ playState, setPlayState }) {
   const constraints = {
     audio: false,
     video: {
-      facingMode: 'environment',
-      width: 1080,
-      height: 1920,
+      facingMode: 'environment', 
+      width: 400, 
+      height: 700, 
     }
   };
 
