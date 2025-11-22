@@ -37,13 +37,15 @@ function Game3({ scoreState, setScoreState, playState, setPlayState }) {
   return (
     <div className={styles.WidegameContainer}>
       {/* iframe で Unity WebGL を読み込む */}
+      {showFrame && (
       <iframe
         key="unity3"
         src="/unity3/index.html"        // ← Unity のビルドフォルダ内 index.html
         className={styles.WideCanvas}
         title="UnityGame3"
         allow="autoplay; fullscreen"
-      />
+        />
+        )}
     </div>
   );
 }
