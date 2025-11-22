@@ -1,13 +1,22 @@
 import React from 'react'
 
-export default function Intro3({introStep, setIntroStep }) {
+export default function Intro3(props) {
+
+  const {
+    introStep,
+    setIntroStep,
+    gameState,
+    setGameState
+  } = props;
+
   return (
     <>
-      <h1>intro3</h1>
-      <p>まずテーブルにおかれた銃をとってくれ</p>
-      <p>仕様は銃身ｘ、装弾数∞、重さｘの特注品。</p>
-      <p>だが、それだけじゃない</p>
-      <button onClick={() => setIntroStep(introStep + 1)} >つぎへ</button>
+      <h1>Are You Ready?</h1>
+      <p>これよりカメラを起動する</p>
+      <p>ミッションはマークの破壊とセキュリティの突破だ</p>
+      <p>残りの時間制限はこちらからカメラ画面に表示する</p>
+      <p>諸君の健闘を祈る</p>
+      <button onClick={() => setGameState('Playing')} >突入！！</button>
       <button onClick={() => setIntroStep(introStep - 1)} >もどる</button>
     </>
   )
