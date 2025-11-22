@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import React, { useEffect, useState } from "react";
 // 横画面ゲームに対応すべく、ゲーム開始前に画面の向きを判定するフック
 
 /**

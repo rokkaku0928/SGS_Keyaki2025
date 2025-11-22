@@ -1,50 +1,65 @@
-import React ,{  useEffect, useCallback } from 'react'
-import { Unity, useUnityContext } from "react-unity-webgl";
+import React, { useEffect, useState } from "react";
 import styles from "./Game.module.css";
-// S.Y
 
-function Game2({scoreState, setScoreState , playState, setPlayState}) {
-    const { unityProvider, loadingProgression, isLoaded } = useUnityContext({
-        loaderUrl: "/unity2/Build/DoorGame_2.loader.js",
-        dataUrl: "/unity2/Build/DoorGame_2.data",
-        frameworkUrl: "/unity2/Build/DoorGame_2.framework.js",
-        codeUrl: "/unity2/Build/DoorGame_2.wasm",
-    });
-    const loadingPercentage = Math.round(loadingProgression * 100);
+function Game2({ scoreState, setScoreState, playState, setPlayState }) {
 
-    // ゲームクリア後の"つぎへ"ボタン
-    const ClearButton = useCallback(() => {
-        setScoreState(scoreState + 1);
-        setPlayState(playState = 0);
-    }, []); // 依存配列は空でOK
+  const [showFrame, setShowFrame] = useState(true);
 
-    useEffect(() => {
-        // C#側で指定する関数名 'NextButton' で登録
-        window.NextButton = ClearButton
+  useEffect(() => {
+    function handleMessage(event) {
+      if (!event.data || typeof event.data !== "object") return;
 
-        // コンポーネントが不要になったら登録解除（クリーンアップ）
-        return () => {
-            delete window.NextButton;
-        };
-    }, [ClearButton]);
+      // ★ iframe を消す（＝WebGL を破棄）
+      const destroyIframe = async () => {
+        console.log("[Game1] iframe を削除して WebGL を破棄します");
 
-    
-    return (
-        <div className={styles.gameContainer}>
-            {isLoaded === false && (
-                // We'll conditionally render the loading overlay if the Unity
-                // Application is not loaded.
-                <div className={styles.loadingOverlay}>
-                    <p>読み込み中... ({loadingPercentage}%)</p>
-                </div>
-            )}
+        if (window.unityInstance) {
+          try {
+            await window.unityInstance.Quit();
+            console.log("[Game2] Unity Quit 完了");
+          } catch (e) {
+            console.warn("[Game2] Unity Quit 失敗:", e);
+          }
+          window.unityInstance = null;
+        }
 
+        const frame = document.querySelector('iframe[title="UnityGame2"]');
+        if (frame) {
+          frame.src = "about:blank";
+        }
 
-            <Unity 
-                unityProvider={unityProvider}
-                className={styles.unityCanvas}
-            />
-        </ div>
-    )
+        setShowFrame(false);
+      };
+
+      if (event.data.type === "BackButton") {
+        destroyIframe();
+        setPlayState(0);
+      }
+
+      if (event.data.type === "NextButton") {
+        destroyIframe();
+        setScoreState(prev => prev + 1);
+        setPlayState(0);
+      }
+    }
+
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
+  }, []);
+
+  return (
+    <div className={styles.gameContainer}>
+      {showFrame && (
+        <iframe
+          key="unity2"
+          src="/unity2/index.html"
+          className={styles.unityCanvas}
+          title="UnityGame2"
+          allow="autoplay; fullscreen"
+        />
+      )}
+    </div>
+  );
 }
-export default Game2
+
+export default Game2;

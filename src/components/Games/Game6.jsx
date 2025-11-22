@@ -1,62 +1,65 @@
-import React ,{  useEffect, useCallback } from 'react'
-import { Unity, useUnityContext } from "react-unity-webgl";
+import React, { useEffect, useState } from "react";
 import styles from "./Game.module.css";
 
+function Game6({ scoreState, setScoreState, playState, setPlayState }) {
 
-function Game6({scoreState, setScoreState , playState, setPlayState}) {
+  const [showFrame, setShowFrame] = useState(true);
 
-    const { unityProvider, loadingProgression, isLoaded } = useUnityContext({
-        loaderUrl: "/unity6/Build/KeyakiTestver3_build.loader.js",
-        dataUrl: "/unity6/Build/KeyakiTestver3_build.data",
-        frameworkUrl: "/unity6/Build/KeyakiTestver3_build.framework.js",
-        codeUrl: "/unity6/Build/KeyakiTestver3_build.wasm",
-    });
+  useEffect(() => {
+    function handleMessage(event) {
+      if (!event.data || typeof event.data !== "object") return;
 
-    const loadingPercentage = Math.round(loadingProgression * 100);
+      // ★ iframe を消す（＝WebGL を破棄）
+      const destroyIframe = async () => {
+        console.log("[Game6] iframe を削除して WebGL を破棄します");
 
-    // ゲーム中の"もどる"ボタン
-    const BackButton = useCallback(() => {
-        setPlayState(playState = 0);
-    }, []); // 依存配列は空でOK
+        if (window.unityInstance) {
+          try {
+            await window.unityInstance.Quit();
+            console.log("[Game6] Unity Quit 完了");
+          } catch (e) {
+            console.warn("[Game6] Unity Quit 失敗:", e);
+          }
+          window.unityInstance = null;
+        }
 
-    // ゲームクリア後の"つぎへ"ボタン
-    const ClearButton = useCallback(() => {
-        setScoreState(scoreState + 1);
-        setPlayState(playState = 0);
-    }, []); // 依存配列は空でOK
+        const frame = document.querySelector('iframe[title="UnityGame6"]');
+        if (frame) {
+          frame.src = "about:blank";
+        }
 
-    useEffect(() => {
-        // C#側で指定する関数名 'NextButton' で登録
-        window.NextButton = ClearButton
+        setShowFrame(false);
+      };
 
-        window.BackButton = BackButton
+      if (event.data.type === "BackButton") {
+        destroyIframe();
+        setPlayState(0);
+      }
 
-        // コンポーネントが不要になったら登録解除（クリーンアップ）
-        return () => {
-            delete window.NextButton;
-            delete window.BackButton;
-        };
-    }, [ClearButton, BackButton]);
+      if (event.data.type === "NextButton") {
+        destroyIframe();
+        setScoreState(prev => prev + 1);
+        setPlayState(0);
+      }
+    }
 
-    
-    return (
-        <div className={styles.gameContainer}>
-            {isLoaded === false && (
-                // We'll conditionally render the loading overlay if the Unity
-                // Application is not loaded.
-                <div className={styles.loadingOverlay}>
-                    <p>読み込み中... ({loadingPercentage}%)</p>
-                </div>
-            )}
-                    
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
+  }, []);
 
-
-            <Unity 
-                unityProvider={unityProvider}
-                className={styles.unityCanvas}
-            />
-        </ div>
-    )
+  return (
+    <div className={styles.gameContainer}>
+      {showFrame && (
+        <iframe
+          key="unity6"
+          src="/unity6/index.html"
+          className={styles.unityCanvas}
+          title="UnityGame6"
+          allow="autoplay; fullscreen"
+        />
+      )}
+    </div>
+  );
 }
 
-export default Game6
+export default Game6;

@@ -1,16 +1,18 @@
 /* スマホ画面のコンテナ */
 .gameContainer {
   width: 100%;
-  max-width: 450px; /* スマホの最大幅を指定 */
-  /* タイマー分の高さ（Timer.module.css の --timer-height と合わせる）を差し引いた高さにする */
-  height: calc(100vh - 80px);
-  margin: auto;     /* 中央揃え */
-  border: 2px solid #ccc; /* 枠線（任意） */
-  position: relative; /* 子要素の基準位置にする */
-  overflow: hidden;
-  box-sizing: border-box;
+  max-width: 450px;
 
-  display: flex;            /* 中央に配置してキャンバスの高さに合わせる */
+  /* ★ ここを 9:16 に固定 */
+  aspect-ratio: 9 / 16;
+
+  margin: auto;
+  border: 2px solid #ccc;
+  position: relative;
+  box-sizing: border-box;
+  overflow: hidden;
+
+  display: flex;
   justify-content: center;
   align-items: center;
 }
@@ -51,3 +53,64 @@
   justify-content: center;
   align-items: center;
 }
+
+.portraitScale {
+  transform: scale(1);      /* ← 縦画面に収める縮小率 */
+  transform-origin: top center;
+}
+
+.portraitWrapper {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.portraitScale canvas {
+  width: 100% !important;      /* 横幅を枠に合わせる */
+  height: auto !important;     /* 高さは比率で計算される */
+}
+
+/* 横画面（16:9）用コンテナ */
+.WideCanvas {
+  position: relative;
+  width: 100%;
+  max-width: 800px;   /* 横画面用の最大サイズ（お好みで調整） */
+  aspect-ratio: 16 / 9;  /* ★ 常に横長16:9を維持 ★ */
+  background: #000;   /* ゲーム外が見えないように黒背景に */
+
+  /* 画面中央に配置する */
+  margin: auto;
+  border: none;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.WidegameContainer {
+  width: calc(100vw - 25px);   /* ★ 横幅いっぱい - 50px */
+  height: calc((100vw - 25px) * 9 / 16); /* ★ その幅を使って 16:9 の高さを計算 */
+
+  max-height: 100vh; /* 高さが画面を超えないように */
+
+  margin: auto;
+  border: 2px solid #ccc;
+  position: relative;
+  box-sizing: border-box;
+  overflow: hidden;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loadingMessage {
+  font-size: 24px;
+  text-align: center;
+  margin-top: 30px;
+  color: white;
+}
+
+
+
