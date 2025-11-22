@@ -14,7 +14,6 @@ function Intro2({introStep, setIntroStep }){
             </p>
             <p>まずは室内に入って話をしよう</p>
             <p>受付のやつ？、、、あぁ気になったら話しとけ</p>
-            <p>黙って入ったとこでとっつかまりゃしねぇさｗｗ</p>
             <button onClick={() => setIntroStep(introStep + 1)} >教室内へ入った</button>
             <button onClick={() => setIntroStep(introStep - 1)} >もどる</button>
         
