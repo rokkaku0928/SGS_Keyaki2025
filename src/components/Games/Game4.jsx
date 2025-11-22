@@ -1,72 +1,51 @@
-import React, { useEffect, useCallback } from 'react';
-import { Unity, useUnityContext } from "react-unity-webgl";
+import React, { useEffect, useState } from "react";
 import styles from "./Game.module.css";
 
 function Game4({ scoreState, setScoreState, playState, setPlayState }) {
-    const { unityProvider, loadingProgression, isLoaded, unload } = useUnityContext({
-        loaderUrl: "/unity4/Build/Gamedayo.loader.js",
-        dataUrl: "/unity4/Build/Gamedayo.data",
-        frameworkUrl: "/unity4/Build/Gamedayo.framework.js",
-        codeUrl: "/unity4/Build/Gamedayo.wasm",
-    });
 
-    // --- Unity破棄後にスコア加算 ---
-    const ClearButton = useCallback(async () => {
-        try {
-            await unload(); // 完全破棄を待つ
-            console.log("[Game4] unload 完了");
+    const [showFrame, setShowFrame] = useState(true);
+  // Unity → React のメッセージを受け取る（BackButton / NextButton）
+  useEffect(() => {
+    function handleMessage(event) {
+        if (!event.data || typeof event.data !== "object") return;
+        
+        // ★ iframe を消す（＝WebGL を破棄）
+        const destroyIframe = () => {
+        console.log("[Game4] iframe を削除して WebGL を破棄します");
+        setShowFrame(false);  // ← DOM から削除される
+      };
 
-            // スマホ用クールダウン
-            setTimeout(() => {
-                setScoreState(prev => prev + 1);
-                setPlayState(0);
-            }, 300); // 短めの遅延
-        } catch (e) {
-            console.warn("[Game4] unload failed", e);
-        }
-    }, [unload, setScoreState, setPlayState]);
-
-    // --- Unity破棄後に戻るだけ ---
-    const BackButton = useCallback(async () => {
-        try {
-            await unload();
-        } catch (e) {
-            console.warn("[Game4] unload failed", e);
-        }
-
-        setTimeout(() => {
+        if (event.data.type === "BackButton") {
+            destroyIframe();
             setPlayState(0);
-        }, 300);
-    }, [unload, setPlayState]);
+      }
 
-    // --- Unity → JS のボタン登録 ---
-    useEffect(() => {
-        window.NextButton = ClearButton;
-        window.BackButton = BackButton;
+        if (event.data.type === "NextButton") {
+            destroyIframe();
+            setScoreState(prev => prev + 1);
+            setPlayState(0);
+      }
+    }
 
-        return () => {
-            if (window.NextButton === ClearButton) delete window.NextButton;
-            if (window.BackButton === BackButton) delete window.BackButton;
-        };
-    }, [ClearButton, BackButton]);
+    window.addEventListener("message", handleMessage);
 
-    return (
-        <div className={styles.gameContainer}>
-            {!isLoaded && (
-                <div className={styles.loadingOverlay}>
-                    <p>読み込み中... ({Math.round(loadingProgression * 100)}%)</p>
-                </div>
-            )}
+    return () => {
+      window.removeEventListener("message", handleMessage);
+    };
+  }, []);
 
-            {/* playState が 1 のときのみ Unity 表示 */}
-            {playState !== 0 && (
-                <Unity
-                    unityProvider={unityProvider}
-                    className={styles.unityCanvas}
-                />
-            )}
-        </div>
-    );
+  return (
+    <div className={styles.gameContainer}>
+      {/* iframe で Unity WebGL を読み込む */}
+          <iframe
+              key="unity4"
+              src="/unity4/index.html"        // ← Unity のビルドフォルダ内 index.html
+              className={styles.unityCanvas}
+              title="UnityGame4"
+              allow="autoplay; fullscreen"
+          />
+    </div>
+  );
 }
 
 export default Game4;

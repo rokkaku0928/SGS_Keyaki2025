@@ -1,56 +1,51 @@
-import React ,{ useEffect, useCallback } from 'react'
-import { Unity, useUnityContext } from "react-unity-webgl";
+import React, { useEffect, useState } from "react";
 import styles from "./Game.module.css";
-// S.Y
 
-function Game2({scoreState, setScoreState , playState, setPlayState}) {
+function Game2({ scoreState, setScoreState, playState, setPlayState }) {
 
-    const { unityProvider, loadingProgression, isLoaded, unload } = useUnityContext({
-        loaderUrl: "/unity2/Build/DoorGame_2.loader.js",
-        dataUrl: "/unity2/Build/DoorGame_2.data",
-        frameworkUrl: "/unity2/Build/DoorGame_2.framework.js",
-        codeUrl: "/unity2/Build/DoorGame_2.wasm",
-    });
+    const [showFrame, setShowFrame] = useState(true);
+  // Unity → React のメッセージを受け取る（BackButton / NextButton）
+  useEffect(() => {
+    function handleMessage(event) {
+        if (!event.data || typeof event.data !== "object") return;
+        
+        // ★ iframe を消す（＝WebGL を破棄）
+        const destroyIframe = () => {
+        console.log("[Game2] iframe を削除して WebGL を破棄します");
+        setShowFrame(false);  // ← DOM から削除される
+      };
 
-    const loadingPercentage = Math.round(loadingProgression * 100);
+        if (event.data.type === "BackButton") {
+            destroyIframe();
+            setPlayState(0);
+      }
 
-    // ゲームクリア後の"つぎへ"ボタン
-    const ClearButton = useCallback(() => {
-        setScoreState(scoreState + 1);
-        setPlayState(0);
-    }, []);
+        if (event.data.type === "NextButton") {
+            destroyIframe();
+            setScoreState(prev => prev + 1);
+            setPlayState(0);
+      }
+    }
 
-    useEffect(() => {
-        // C# 側から呼んでもらう JS 関数を登録
-        window.NextButton = ClearButton;
+    window.addEventListener("message", handleMessage);
 
-        // クリーンアップ
-        return () => {
-            delete window.NextButton;
+    return () => {
+      window.removeEventListener("message", handleMessage);
+    };
+  }, []);
 
-            // 勝手にいじりました、デバックした感じは大丈夫そうです
-            try {
-                unload();
-            } catch(e) {
-                console.warn("unload failed", e);
-            }
-        };
-    }, [ClearButton, unload]);
-
-    return (
-        <div className={styles.gameContainer}>
-            {isLoaded === false && (
-                <div className={styles.loadingOverlay}>
-                    <p>読み込み中... ({loadingPercentage}%)</p>
-                </div>
-            )}
-
-            <Unity 
-                unityProvider={unityProvider}
-                className={styles.unityCanvas}
-            />
-        </ div>
-    )
+  return (
+    <div className={styles.gameContainer}>
+      {/* iframe で Unity WebGL を読み込む */}
+          <iframe
+              key="unit2"
+              src="/unity2/index.html"        // ← Unity のビルドフォルダ内 index.html
+              className={styles.unityCanvas}
+              title="UnityGame2"
+              allow="autoplay; fullscreen"
+          />
+    </div>
+  );
 }
 
 export default Game2;
