@@ -3,7 +3,6 @@
     position: fixed;     /* 画面に対して固定位置 */
     top: 0;              /* 上端に配置 */
     left: 0;
-    margin: 10px;        /* 端から少し余白を取る（任意） */
 }
 
 .CameraAim{
