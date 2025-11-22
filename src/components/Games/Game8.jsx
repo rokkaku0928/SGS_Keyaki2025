@@ -4,17 +4,33 @@ import styles from "./Game.module.css";
 function Game8({ scoreState, setScoreState, playState, setPlayState }) {
 
   const [showFrame, setShowFrame] = useState(true);
-  // Unity → React のメッセージを受け取る（BackButton / NextButton）
+
   useEffect(() => {
     function handleMessage(event) {
       if (!event.data || typeof event.data !== "object") return;
 
       // ★ iframe を消す（＝WebGL を破棄）
-        const destroyIframe = () => {
+      const destroyIframe = async () => {
         console.log("[Game8] iframe を削除して WebGL を破棄します");
-        setShowFrame(false);  // ← DOM から削除される
-        };
-      
+
+        if (window.unityInstance) {
+          try {
+            await window.unityInstance.Quit();
+            console.log("[Game8] Unity Quit 完了");
+          } catch (e) {
+            console.warn("[Game8] Unity Quit 失敗:", e);
+          }
+          window.unityInstance = null;
+        }
+
+        const frame = document.querySelector('iframe[title="UnityGame8"]');
+        if (frame) {
+          frame.src = "about:blank";
+        }
+
+        setShowFrame(false);
+      };
+
       if (event.data.type === "BackButton") {
         destroyIframe();
         setPlayState(0);
@@ -28,24 +44,20 @@ function Game8({ scoreState, setScoreState, playState, setPlayState }) {
     }
 
     window.addEventListener("message", handleMessage);
-
-    return () => {
-      window.removeEventListener("message", handleMessage);
-    };
+    return () => window.removeEventListener("message", handleMessage);
   }, []);
 
   return (
     <div className={styles.WidegameContainer}>
-      {/* iframe で Unity WebGL を読み込む */}
       {showFrame && (
-      <iframe
-        key="unity8"
-        src="/unity8/index.html"        // ← Unity のビルドフォルダ内 index.html
-        className={styles.WideCanvas}
-        title="UnityGame8"
-        allow="autoplay; fullscreen"
+        <iframe
+          key="unity8"
+          src="/unity8/index.html"
+          className={styles.WideCanvas}
+          title="UnityGame8"
+          allow="autoplay; fullscreen"
         />
-        )}
+      )}
     </div>
   );
 }
