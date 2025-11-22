@@ -1,5 +1,6 @@
 // ...existing code...
 import { useEffect } from 'react';
+import React, { useEffect, useState } from "react";
 
 /**
  * canvas の実ピクセルサイズを devicePixelRatio の上限で制限する
