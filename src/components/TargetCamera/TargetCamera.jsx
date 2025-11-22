@@ -11,8 +11,8 @@ function TargetCamera({playState, setPlayState }) {
     audio: false, 
     video: {
       facingMode: 'environment', 
-      width: 1080, 
-      height: 1920, 
+      width: 400, 
+      height: 700, 
     }
   };
 
