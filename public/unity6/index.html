@@ -6,8 +6,8 @@
     <title>Unity Web Player | Keyaki_Test</title>
   </head>
   <body style="text-align: center; padding: 0; border: 0; margin: 0;">
-    <canvas id="unity-canvas" width=960 height=600 tabindex="-1" style="width: 960px; height: 600px; background: #231F20"></canvas>
-    <script src="Build/KeyakiTestver5_build.loader.js"></script>
+    <canvas id="unity-canvas" width=540 height=960 tabindex="-1" style="width: 540px; height: 960px; background: #231F20"></canvas>
+    <script src="Build/KeyakiTestver8_build.loader.js"></script>
     <script>
       if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
         // Mobile device style: fill the whole browser client area with the game canvas:
@@ -27,9 +27,9 @@
 
       createUnityInstance(document.querySelector("#unity-canvas"), {
         arguments: [],
-        dataUrl: "Build/KeyakiTestver5_build.data",
-        frameworkUrl: "Build/KeyakiTestver5_build.framework.js",
-        codeUrl: "Build/KeyakiTestver5_build.wasm",
+        dataUrl: "Build/KeyakiTestver8_build.data",
+        frameworkUrl: "Build/KeyakiTestver8_build.framework.js",
+        codeUrl: "Build/KeyakiTestver8_build.wasm",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "DefaultCompany",
         productName: "Keyaki_Test",
@@ -37,6 +37,7 @@
         // matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
         // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
       }).then((unityInstance) => {
+        window.unityInstance = unityInstance;
       }).catch((message) => {
         alert(message);
       });

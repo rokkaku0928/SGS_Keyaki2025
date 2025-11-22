@@ -2,134 +2,117 @@ import React, { useEffect, useRef } from 'react';
 import styles from "./TargetCamera.module.css";
 import jsQR from "jsqr";
 
-function TargetCamera({playState, setPlayState }) {
+function TargetCamera({ playState, setPlayState }) {
 
   const videoRef = useRef(null);
   const overlayRef = useRef(null);
 
+  // ★ カメラは高解像度のまま（表示用）
   const constraints = {
-    audio: false, 
+    audio: false,
     video: {
-      facingMode: 'environment', 
-      width: 1080, 
-      height: 1920, 
+      facingMode: 'environment',
+      width: 1080,
+      height: 1920,
     }
   };
 
-  const drawRect = (topLeft, bottomRight) => {
-    const { x: x1, y: y1 } = topLeft;
-    const { x: x2, y: y2 }= bottomRight;
+  // ---- 低解像度で QR 処理（高速化のコア） ----
+  const PROCESS_W = 640;
+  const PROCESS_H = 360;
 
+  // 直近に読み取ったコード（連続反応防止）
+  let lastCode = null;
+
+  // ---- 描画用の枠表示（位置補正済み） ----
+  const drawRect = (topLeft, bottomRight, scaleX, scaleY) => {
     const overlay = overlayRef.current;
-    if (overlay) {
-      overlay.style.left = `${x1}px`;
-      overlay.style.top = `${y1}px`;
-      overlay.style.width = `${x2 - x1}px`;
-      overlay.style.height = `${y2 - y1}px`;
-    }
-  };
+    if (!overlay) return;
 
+    overlay.style.left = `${topLeft.x * scaleX}px`;
+    overlay.style.top = `${topLeft.y * scaleY}px`;
+    overlay.style.width = `${(bottomRight.x - topLeft.x) * scaleX}px`;
+    overlay.style.height = `${(bottomRight.y - topLeft.y) * scaleY}px`;
+  };
 
   useEffect(() => {
-
-    let stream; // クリーンアップ関数でアクセスできるようにするため、外で宣言
-    let timer;  // こちらも同様
+    let stream;
+    let animationId;
 
     (async () => {
       try {
-        stream = await navigator.mediaDevices.getUserMedia(constraints); // 変数に代入
+        stream = await navigator.mediaDevices.getUserMedia(constraints);
         const video = videoRef.current;
         
-        if (video) {
-          video.srcObject = stream;
-          await video.play();
+        if (!video) return;
 
-          const { width, height } = constraints.video;
-          const canvas = new OffscreenCanvas(width, height);
-          const context = canvas.getContext('2d');
+        video.srcObject = stream;
+        await video.play();
 
-          timer = setInterval(() => { // 変数に代入
-            if (!videoRef.current) return; // 念のためチェック
+        // JS による処理用 OffscreenCanvas（低解像度）
+        const canvas = new OffscreenCanvas(PROCESS_W, PROCESS_H);
+        const ctx = canvas.getContext("2d");
 
-            context.drawImage(video, 0, 0, width, height);
-            const imageData = context.getImageData(0, 0, width, height);
-            const code = jsQR(imageData.data, imageData.width, imageData.height);
-            const resultEl = document.querySelector('#result');
+        const loop = () => {
+          if (!videoRef.current) return;
 
-            if (code) {
-              if (resultEl) { // 要素が存在するかチェックしてから操作する
-                drawRect(code.location.topLeftCorner, code.location.bottomRightCorner);
-                resultEl.textContent = code.data;
-              }
+          // 描画（低解像度）
+          ctx.drawImage(video, 0, 0, PROCESS_W, PROCESS_H);
+          const imageData = ctx.getImageData(0, 0, PROCESS_W, PROCESS_H);
 
-              switch (code.data) {
-                case 'game-1':
-                  setPlayState(1);
-                  break;
-                case 'game-2':
-                  setPlayState(2);
-                  break;
-                case 'game-3':
-                  setPlayState(3);
-                  break;
-                case 'game-4':
-                  setPlayState(4);
-                  break;
-                case 'game-5':
-                  setPlayState(5);
-                  break;
-                case 'game-6':
-                  setPlayState(6);
-                  break;
-                case 'game-7':
-                  setPlayState(7);
-                  break;
-                case 'game-8':
-                  setPlayState(8);
-                  break;
-                default:
-                  break;
-              }
-            } else {
-              if (resultEl) { // 要素が存在するかチェックしてから操作する
-                resultEl.textContent = 'No QR code detected';
+          // jsQR で解析
+          const code = jsQR(imageData.data, PROCESS_W, PROCESS_H);
+
+          if (code) {
+            const resultText = code.data;
+
+            // 同じコード連続読み取り防止
+            if (resultText !== lastCode) {
+              lastCode = resultText;
+
+              // 表示解像度への補正係数
+              const scaleX = video.videoWidth / PROCESS_W;
+              const scaleY = video.videoHeight / PROCESS_H;
+
+              drawRect(code.location.topLeftCorner, code.location.bottomRightCorner, scaleX, scaleY);
+
+              // state 遷移
+              if (resultText.startsWith("game-")) {
+                const num = Number(resultText.split("-")[1]);
+                if (num >= 1 && num <= 8) {
+                  setPlayState(num);
+                }
               }
             }
-          }, 300);
-        }
-      } catch (error) {
-        console.log('load error', error);
+          }
+
+          // ★ 高速ループ（FPS改善）
+          animationId = requestAnimationFrame(loop);
+        };
+
+        loop();
+
+      } catch (err) {
+        console.log("camera error", err);
       }
     })();
 
-    // --- ここがクリーンアップ関数です ---
-    // コンポーネントがアンマウントされる（画面から消える）時に実行されます
+    // ---- クリーンアップ ----
     return () => {
-      console.log("カメラとタイマーをクリーンアップします。");
-      if (timer) {
-        clearInterval(timer); // タイマーを停止
-      }
-      if (stream) {
-        stream.getTracks().forEach(track => track.stop()); // カメラストリームを停止
-      }
+      if (animationId) cancelAnimationFrame(animationId);
+      if (stream) stream.getTracks().forEach(t => t.stop());
+      console.log("カメラと処理を停止しました");
     };
   }, []);
 
   return (
     <>
-      <div id="result" style={{ minHeight: '20px' }}></div>
-      <div>
-        <div className={styles.CameraPosition}>
-          <video ref={videoRef} style={{ position: 'absolute', zIndex: 3 }} playsInline autoPlay muted></video>
-          <div
-            id="overlay"
-            ref={overlayRef}
-            className={styles.CameraAim}
-          ></div>
-        </div>
+      <div className={styles.CameraPosition}>
+        <video ref={videoRef} playsInline autoPlay muted style={{ position: "absolute", zIndex: 3 }}></video>
+        <div id="overlay" ref={overlayRef} className={styles.CameraAim}></div>
       </div>
     </>
-  )
+  );
 }
 
-export default TargetCamera
+export default TargetCamera;
