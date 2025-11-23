@@ -8,7 +8,11 @@ const ONE_SECONDS = 1000;
 function Timer(props) {
     // Limit＿Timeが制限時間を定義してる
     const Limit_Time = 480000;
-    const [timerCount, setTimerCount] = useState(Limit_Time);
+    const [timerCount, setTimerCount] = useState(() => {
+        const savedTime = sessionStorage.getItem("timerCount");
+        // 保存された値があれば使い、なければ初期値(Limit_Time)を使う
+        return savedTime !== null ? Number(savedTime) : Limit_Time;
+    });
     const timerIdRef = useRef(null);
     const {
         gameState,
@@ -16,6 +20,10 @@ function Timer(props) {
         timerState,
         setTimerState
     } = props;
+
+    useEffect(() => {
+        sessionStorage.setItem("timerCount", timerCount);
+    }, [timerCount]);
     
     useEffect(() => {
 
