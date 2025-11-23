@@ -5,7 +5,7 @@ function Intro1({introStep, setIntroStep }){
         <>
             <h1>Welcome</h1>
             <h3>QRMissionにようこそ！！！</h3>
-            <p>成蹊ゲームスタジオがゲームを提供するのでどうかよろしく</p>
+            <p><ruby>成蹊<rt>せいけい</rt></ruby>ゲームスタジオがゲームを<ruby>提供<rt>ていきょう</rt></ruby>するのでどうかよろしく</p>
             <p>
                 さっそくルールを<ruby>説明<rt>せつめい</rt></ruby>しよう！
             </p>
