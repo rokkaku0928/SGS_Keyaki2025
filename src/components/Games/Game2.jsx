@@ -3,43 +3,31 @@ import styles from "./Game.module.css";
 
 function Game2({ scoreState, setScoreState, playState, setPlayState }) {
 
-  const [showFrame, setShowFrame] = useState(true);
-
   useEffect(() => {
     function handleMessage(event) {
       if (!event.data || typeof event.data !== "object") return;
 
-      // ★ iframe を消す（＝WebGL を破棄）
-      const destroyIframe = async () => {
-        console.log("[Game1] iframe を削除して WebGL を破棄します");
-
-        if (window.unityInstance) {
-          try {
-            await window.unityInstance.Quit();
-            console.log("[Game2] Unity Quit 完了");
-          } catch (e) {
-            console.warn("[Game2] Unity Quit 失敗:", e);
-          }
-          window.unityInstance = null;
-        }
-
-        const frame = document.querySelector('iframe[title="UnityGame2"]');
-        if (frame) {
-          frame.src = "about:blank";
-        }
-
-        setShowFrame(false);
+      const reloadApp = () => {
+        // 次回の起動時のために必要な情報を保存する
+        // (App.jsxで読み込めるようにキー名を合わせる)
+        sessionStorage.setItem("gameState", "Playing"); // ゲームモードを維持
+        sessionStorage.setItem("playState", 0);         // カメラ画面に戻す
+        
+        // ページを強制リロード（これでメモリが完全に解放される）
+        window.location.reload();
       };
 
       if (event.data.type === "BackButton") {
-        destroyIframe();
-        setPlayState(0);
+        // スコアは変えずにリロード
+        reloadApp();
       }
 
       if (event.data.type === "NextButton") {
-        destroyIframe();
-        setScoreState(prev => prev + 1);
-        setPlayState(0);
+        // ★ここでスコアを加算して保存してからリロード
+        const newScore = scoreState + 1;
+        sessionStorage.setItem("gameScore", newScore);
+        
+        reloadApp();
       }
     }
 
@@ -49,15 +37,13 @@ function Game2({ scoreState, setScoreState, playState, setPlayState }) {
 
   return (
     <div className={styles.gameContainer}>
-      {showFrame && (
-        <iframe
-          key="unity2"
-          src="/unity2/index.html"
-          className={styles.unityCanvas}
-          title="UnityGame2"
-          allow="autoplay; fullscreen"
-        />
-      )}
+      <iframe
+        key="unity2"
+        src="/unity2/index.html"
+        className={styles.unityCanvas}
+        title="UnityGame2"
+        allow="autoplay; fullscreen"
+      />
     </div>
   );
 }

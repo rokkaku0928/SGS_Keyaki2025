@@ -25,12 +25,13 @@ import Score from './components/Score/Score'
 import EndScreen from './pages/EndScreen';
 
 
-
-
 function App() {
 
-  const [gameState, setGameState] = useState('Intro');
-  const [scoreState, setScoreState] = useState(0);
+  const [scoreState, setScoreState] = useState(() => {
+    const savedScore = sessionStorage.getItem("gameScore");
+    // 保存された値があればそれを数値にして使う。なければ初期値 0
+    return savedScore !== null ? Number(savedScore) : 0;
+  });
   const [introStep, setIntroStep] = useState(0);
   const [timerState, setTimerState] = useState(false);
   // playStateは何の電子ゲームをやってるか？という処理と
@@ -44,6 +45,21 @@ function App() {
     const floatingTimerGames = new Set([1, 3, 7]); // 必要に応じてゲーム番号を追加
     setTimerState(floatingTimerGames.has(playState));
   }, [playState]);
+
+  // ★修正: リロード後も 'Playing' などを維持できるようにストレージから読み込む
+  const [gameState, setGameState] = useState(() => {
+    const saved = sessionStorage.getItem("gameState");
+    return saved ? saved : 'Intro'; 
+  });
+
+  // ★追加: Stateが変わるたびに保存しておく（リロード対策）
+  useEffect(() => {
+    sessionStorage.setItem("gameState", gameState);
+  }, [gameState]);
+
+  useEffect(() => {
+    sessionStorage.setItem("gameScore", scoreState);
+  }, [scoreState]);
 
   const renderContent = () => {
     switch (gameState) {
