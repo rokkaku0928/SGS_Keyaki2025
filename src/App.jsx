@@ -38,7 +38,7 @@ function App() {
   // playStateが０ならカメラ、その他n（何らかの数字）
   // だったらn番目のゲーム
   const [playState, setPlayState] = useState(0);
-  const totalKeys = 10; // 鍵の総数
+  const totalKeys = 8; // 鍵の総数
   useEffect(() => {
     // タイマーを「浮かせて表示」したいゲーム番号をここで定義
     const floatingTimerGames = new Set([1, 3, 7]); // 必要に応じてゲーム番号を追加
@@ -51,13 +51,7 @@ function App() {
         const Intros = [
           <Intro1 introStep={introStep} setIntroStep={setIntroStep} />,
           <Intro2 introStep={introStep} setIntroStep={setIntroStep} />,
-          <Intro3 introStep={introStep} setIntroStep={setIntroStep} />,
-          <Intro4 introStep={introStep} setIntroStep={setIntroStep} />,
-          <Intro5 introStep={introStep} setIntroStep={setIntroStep} />,
-          <Intro6 introStep={introStep} setIntroStep={setIntroStep} />,
-          <Intro7 introStep={introStep} setIntroStep={setIntroStep} />,
-          <Intro8 introStep={introStep} setIntroStep={setIntroStep} />,
-          <Intro9 introStep={introStep} setIntroStep={setIntroStep} gameState={gameState} setGameState={setGameState} />,
+          <Intro3 introStep={introStep} setIntroStep={setIntroStep} gameState={gameState} setGameState={setGameState}/>,
         ];
         return (
           <>
