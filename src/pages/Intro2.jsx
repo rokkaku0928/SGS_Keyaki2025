@@ -1,3 +1,5 @@
+import React from 'react'
+
 function Intro2({introStep, setIntroStep }){
     return (
         <>

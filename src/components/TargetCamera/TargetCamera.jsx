@@ -7,19 +7,17 @@ function TargetCamera({ playState, setPlayState }) {
   const videoRef = useRef(null);
   const overlayRef = useRef(null);
 
-  // ★ カメラは高解像度のまま（表示用）
+  // ★ 修正点1: width, heightの強制指定を削除し、カメラ本来の解像度で取得する
   const constraints = {
     audio: false,
     video: {
       facingMode: 'environment', 
-      width: 400, 
-      height: 700, 
+      // width: 400, height: 700 はデバイスによって歪む原因になるため削除
     }
   };
 
-  // ---- 低解像度で QR 処理（高速化のコア） ----
-  const PROCESS_W = 640;
-  const PROCESS_H = 360;
+  // jsQRの処理を軽くするための最大サイズ
+  const MAX_CANVAS_SIZE = 600;
 
   // 直近に読み取ったコード（連続反応防止）
   let lastCode = null;
@@ -49,30 +47,53 @@ function TargetCamera({ playState, setPlayState }) {
         video.srcObject = stream;
         await video.play();
 
-        // JS による処理用 OffscreenCanvas（低解像度）
-        const canvas = new OffscreenCanvas(PROCESS_W, PROCESS_H);
-        const ctx = canvas.getContext("2d");
+        // JS による処理用 OffscreenCanvas (初期サイズは後で上書きするため適当でOK)
+        const canvas = new OffscreenCanvas(1, 1);
+        const ctx = canvas.getContext("2d", { willReadFrequently: true });
 
         const loop = () => {
           if (!videoRef.current) return;
+          const currentVideo = videoRef.current;
 
-          // 描画（低解像度）
-          ctx.drawImage(video, 0, 0, PROCESS_W, PROCESS_H);
-          const imageData = ctx.getImageData(0, 0, PROCESS_W, PROCESS_H);
+          // ★ 修正点2: videoのデータが十分に読み込まれるまで待機
+          if (currentVideo.readyState !== currentVideo.HAVE_ENOUGH_DATA) {
+            animationId = requestAnimationFrame(loop);
+            return;
+          }
 
-          // jsQR で解析
-          const code = jsQR(imageData.data, PROCESS_W, PROCESS_H);
+          // カメラの本来の解像度を取得
+          const videoWidth = currentVideo.videoWidth;
+          const videoHeight = currentVideo.videoHeight;
+
+          // ★ 修正点3: アスペクト比を保ったまま、長辺がMAX_CANVAS_SIZEになるように縮小率を計算
+          const scale = Math.min(MAX_CANVAS_SIZE / Math.max(videoWidth, videoHeight), 1);
+          const processW = Math.floor(videoWidth * scale);
+          const processH = Math.floor(videoHeight * scale);
+
+          // Canvasのサイズを動的に更新（ここでアスペクト比の歪みがなくなります）
+          if (canvas.width !== processW || canvas.height !== processH) {
+            canvas.width = processW;
+            canvas.height = processH;
+          }
+
+          // 描画（正しいアスペクト比のまま低解像度化）
+          ctx.drawImage(currentVideo, 0, 0, processW, processH);
+          const imageData = ctx.getImageData(0, 0, processW, processH);
+
+          // jsQR で解析 (反転チェックを省くことでさらに高速化)
+          const code = jsQR(imageData.data, processW, processH, {
+            inversionAttempts: "dontInvert",
+          });
 
           if (code) {
             const resultText = code.data;
 
-            // 同じコード連続読み取り防止
             if (resultText !== lastCode) {
               lastCode = resultText;
 
-              // 表示解像度への補正係数
-              const scaleX = video.videoWidth / PROCESS_W;
-              const scaleY = video.videoHeight / PROCESS_H;
+              // ★ 修正点4: Canvasサイズから元のvideoサイズへ戻すためのスケール係数を計算
+              const scaleX = videoWidth / processW;
+              const scaleY = videoHeight / processH;
 
               drawRect(code.location.topLeftCorner, code.location.bottomRightCorner, scaleX, scaleY);
 
@@ -103,7 +124,7 @@ function TargetCamera({ playState, setPlayState }) {
       if (stream) stream.getTracks().forEach(t => t.stop());
       console.log("カメラと処理を停止しました");
     };
-  }, []);
+  }, [setPlayState]);
 
   return (
     <>

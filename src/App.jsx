@@ -1,15 +1,8 @@
 import './App.css'
 import React, {useEffect, useState } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Intro1 from './pages/Intro1'
 import Intro2 from './pages/Intro2'
 import Intro3 from './pages/Intro3'
-import Intro4 from './pages/Intro4'
-import Intro5 from './pages/Intro5'
-import Intro6 from './pages/Intro6'
-import Intro7 from './pages/Intro7'
-import Intro8 from './pages/Intro8'
-import Intro9 from './pages/Intro9'
 import Game1 from './components/Games/Game1'
 import Game2 from './components/Games/Game2'
 import Game3 from './components/Games/Game3'
@@ -18,7 +11,6 @@ import Game5 from './components/Games/Game5';
 import Game6 from './components/Games/Game6';
 import Game7 from './components/Games/Game7';
 import Game8 from './components/Games/Game8';
-import GameOver from './components/Games/GameOver'
 import TargetCamera from './components/TargetCamera/TargetCamera';
 import Timer from './components/Timer/Timer';
 import Score from './components/Score/Score'
@@ -118,8 +110,8 @@ function App() {
         } else if ( 1 <= scoreState && scoreState <= 2) {
           return (
             <EndScreen
-              title="素晴らしい！"
-              message="見事な結果です！おめでとうございます！"
+              title="まずまずだ"
+              message="君の協力に感謝する"
               score={scoreState}
               design="modern" // この 'modern' が styles.modern にマッピングされます
             />
@@ -129,7 +121,7 @@ function App() {
           return (
             <EndScreen
               title="よくやった！！"
-              message="見事な結果です！おめでとうございます！"
+              message="大助かりだ！！！"
               score={scoreState}
               design="retro" // この 'modern' が styles.modern にマッピングされます
             />
@@ -138,7 +130,7 @@ function App() {
           return (
             <EndScreen
               title="素晴らしい！"
-              message="見事な結果です！おめでとうございます！"
+              message="おめでとう！！！"
               score={scoreState}
               design="steampunk" // この 'modern' が styles.modern にマッピングされます
             />
@@ -146,7 +138,7 @@ function App() {
         } else if (9 <= scoreState && scoreState <= 10) {
             <EndScreen
               title="素晴らしい！"
-              message="見事な結果です！おめでとうございます！"
+              message="見事な結果だ！おめでとう！！！"
               score={scoreState}
               design="playful" // この 'modern' が styles.modern にマッピングされます
             />
