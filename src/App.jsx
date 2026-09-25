@@ -11,6 +11,7 @@ import Game5 from './components/Games/Game5';
 import Game6 from './components/Games/Game6';
 import Game7 from './components/Games/Game7';
 import Game8 from './components/Games/Game8';
+import Game9 from './components/Games/Game9';
 import TargetCamera from './components/TargetCamera/TargetCamera';
 import Timer from './components/Timer/Timer';
 import Score from './components/Score/Score'
@@ -76,6 +77,7 @@ function App() {
           <Game6 scoreState={scoreState} setScoreState={setScoreState} setPlayState={setPlayState} playState={playState} />,
           <Game7 scoreState={scoreState} setScoreState={setScoreState} setPlayState={setPlayState} playState={playState} />,
           <Game8 scoreState={scoreState} setScoreState={setScoreState} setPlayState={setPlayState} playState={playState} />,
+          <Game9 scoreState={scoreState} setScoreState={setScoreState} setPlayState={setPlayState} playState={playState} />,
         ];
         return (
           <>

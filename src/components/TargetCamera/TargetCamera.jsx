@@ -100,7 +100,7 @@ function TargetCamera({ playState, setPlayState }) {
               // state 遷移
               if (resultText.startsWith("game-")) {
                 const num = Number(resultText.split("-")[1]);
-                if (num >= 1 && num <= 8) {
+                if (num >= 1 && num <= 9) {
                   setPlayState(num);
                 }
               }

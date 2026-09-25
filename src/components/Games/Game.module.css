@@ -112,5 +112,61 @@
   color: white;
 }
 
+/* =========================
+   汎用：縦画面
+   最大 450 × 800
+   ========================= */
+
+.PortraitGame {
+  width: min(450px, 100vw);
+  aspect-ratio: 9 / 16;
+
+  margin: auto;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 
+/* =========================
+   汎用：横画面・標準
+   最大 800 × 450
+   ========================= */
+
+.WideGame {
+  width: min(800px, 100vw);
+  aspect-ratio: 16 / 9;
+
+  margin: auto;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+/* =========================
+   汎用：横画面・大
+   最大 1000 × 562.5
+   ========================= */
+
+.LargeWideGame {
+  width: min(1000px, 100vw);
+  aspect-ratio: 16 / 9;
+
+  margin: auto;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
