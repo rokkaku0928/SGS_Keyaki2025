@@ -37,7 +37,7 @@ function Game1({ scoreState, setScoreState, playState, setPlayState }) {
   }, [scoreState]); // scoreStateを使うので依存配列に入れる
 
   return (
-    <div className={styles.gameContainer}>
+    <div className={styles.PortraitGame}>
       <iframe
         key="unity1"
         src="/unity1/index.html"
