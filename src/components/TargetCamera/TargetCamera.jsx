@@ -1,38 +1,59 @@
+
 import React, { useEffect, useRef } from 'react';
 import styles from "./TargetCamera.module.css";
 import jsQR from "jsqr";
+import cameraBgm from "../../assets/Project_261018_test2.mp3";
 
 function TargetCamera({ playState, setPlayState }) {
-
   const videoRef = useRef(null);
   const overlayRef = useRef(null);
+  const audioRef = useRef(null);
 
-  // ★ 修正点1: width, heightの強制指定を削除し、カメラ本来の解像度で取得する
+  // カメラ設定
   const constraints = {
     audio: false,
     video: {
-      facingMode: 'environment', 
-      // width: 400, height: 700 はデバイスによって歪む原因になるため削除
+      facingMode: 'environment',
     }
   };
 
-  // jsQRの処理を軽くするための最大サイズ
+  // QRコード解析用の最大サイズ
   const MAX_CANVAS_SIZE = 600;
 
   // 直近に読み取ったコード（連続反応防止）
   let lastCode = null;
 
-  // ---- 描画用の枠表示（位置補正済み） ----
+  // ---- BGM再生処理 ----
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    audio.volume = 0.3;
+
+    audio.play().catch((err) => {
+      console.log("BGMを再生できませんでした", err);
+    });
+
+    return () => {
+      audio.pause();
+      audio.currentTime = 0;
+    };
+  }, []);
+
+  // ---- 描画用の枠表示 ----
   const drawRect = (topLeft, bottomRight, scaleX, scaleY) => {
     const overlay = overlayRef.current;
     if (!overlay) return;
 
     overlay.style.left = `${topLeft.x * scaleX}px`;
     overlay.style.top = `${topLeft.y * scaleY}px`;
-    overlay.style.width = `${(bottomRight.x - topLeft.x) * scaleX}px`;
-    overlay.style.height = `${(bottomRight.y - topLeft.y) * scaleY}px`;
+    overlay.style.width =
+      `${(bottomRight.x - topLeft.x) * scaleX}px`;
+    overlay.style.height =
+      `${(bottomRight.y - topLeft.y) * scaleY}px`;
   };
 
+  // ---- カメラ・QRコード読み取り処理 ----
   useEffect(() => {
     let stream;
     let animationId;
@@ -41,49 +62,76 @@ function TargetCamera({ playState, setPlayState }) {
       try {
         stream = await navigator.mediaDevices.getUserMedia(constraints);
         const video = videoRef.current;
-        
-        if (!video) return;
+
+        if (!video) {
+          stream.getTracks().forEach((track) => track.stop());
+          return;
+        }
 
         video.srcObject = stream;
         await video.play();
 
-        // JS による処理用 OffscreenCanvas (初期サイズは後で上書きするため適当でOK)
         const canvas = new OffscreenCanvas(1, 1);
-        const ctx = canvas.getContext("2d", { willReadFrequently: true });
+        const ctx = canvas.getContext("2d", {
+          willReadFrequently: true
+        });
 
         const loop = () => {
           if (!videoRef.current) return;
+
           const currentVideo = videoRef.current;
 
-          // ★ 修正点2: videoのデータが十分に読み込まれるまで待機
-          if (currentVideo.readyState !== currentVideo.HAVE_ENOUGH_DATA) {
+          if (
+            currentVideo.readyState !==
+            currentVideo.HAVE_ENOUGH_DATA
+          ) {
             animationId = requestAnimationFrame(loop);
             return;
           }
 
-          // カメラの本来の解像度を取得
           const videoWidth = currentVideo.videoWidth;
           const videoHeight = currentVideo.videoHeight;
 
-          // ★ 修正点3: アスペクト比を保ったまま、長辺がMAX_CANVAS_SIZEになるように縮小率を計算
-          const scale = Math.min(MAX_CANVAS_SIZE / Math.max(videoWidth, videoHeight), 1);
+          const scale = Math.min(
+            MAX_CANVAS_SIZE /
+              Math.max(videoWidth, videoHeight),
+            1
+          );
+
           const processW = Math.floor(videoWidth * scale);
           const processH = Math.floor(videoHeight * scale);
 
-          // Canvasのサイズを動的に更新（ここでアスペクト比の歪みがなくなります）
-          if (canvas.width !== processW || canvas.height !== processH) {
+          if (
+            canvas.width !== processW ||
+            canvas.height !== processH
+          ) {
             canvas.width = processW;
             canvas.height = processH;
           }
 
-          // 描画（正しいアスペクト比のまま低解像度化）
-          ctx.drawImage(currentVideo, 0, 0, processW, processH);
-          const imageData = ctx.getImageData(0, 0, processW, processH);
+          ctx.drawImage(
+            currentVideo,
+            0,
+            0,
+            processW,
+            processH
+          );
 
-          // jsQR で解析 (反転チェックを省くことでさらに高速化)
-          const code = jsQR(imageData.data, processW, processH, {
-            inversionAttempts: "dontInvert",
-          });
+          const imageData = ctx.getImageData(
+            0,
+            0,
+            processW,
+            processH
+          );
+
+          const code = jsQR(
+            imageData.data,
+            processW,
+            processH,
+            {
+              inversionAttempts: "dontInvert",
+            }
+          );
 
           if (code) {
             const resultText = code.data;
@@ -91,15 +139,22 @@ function TargetCamera({ playState, setPlayState }) {
             if (resultText !== lastCode) {
               lastCode = resultText;
 
-              // ★ 修正点4: Canvasサイズから元のvideoサイズへ戻すためのスケール係数を計算
               const scaleX = videoWidth / processW;
               const scaleY = videoHeight / processH;
 
-              drawRect(code.location.topLeftCorner, code.location.bottomRightCorner, scaleX, scaleY);
+              drawRect(
+                code.location.topLeftCorner,
+                code.location.bottomRightCorner,
+                scaleX,
+                scaleY
+              );
 
-              // state 遷移
+              // ゲーム画面への状態遷移
               if (resultText.startsWith("game-")) {
-                const num = Number(resultText.split("-")[1]);
+                const num = Number(
+                  resultText.split("-")[1]
+                );
+
                 if (num >= 1 && num <= 9) {
                   setPlayState(num);
                 }
@@ -107,7 +162,6 @@ function TargetCamera({ playState, setPlayState }) {
             }
           }
 
-          // ★ 高速ループ（FPS改善）
           animationId = requestAnimationFrame(loop);
         };
 
@@ -118,19 +172,47 @@ function TargetCamera({ playState, setPlayState }) {
       }
     })();
 
-    // ---- クリーンアップ ----
+    // クリーンアップ
     return () => {
-      if (animationId) cancelAnimationFrame(animationId);
-      if (stream) stream.getTracks().forEach(t => t.stop());
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+      }
+
+      if (stream) {
+        stream.getTracks().forEach((track) => track.stop());
+      }
+
       console.log("カメラと処理を停止しました");
     };
   }, [setPlayState]);
 
   return (
     <>
+      {/* カメラ画面表示中のBGM */}
+      <audio
+        ref={audioRef}
+        src={cameraBgm}
+        loop
+        preload="auto"
+      />
+
       <div className={styles.CameraPosition}>
-        <video ref={videoRef} playsInline autoPlay muted style={{ position: "absolute", zIndex: 3 }}></video>
-        <div id="overlay" ref={overlayRef} className={styles.CameraAim}></div>
+        <video
+          ref={videoRef}
+          playsInline
+          autoPlay
+          muted
+          style={{
+            position: "absolute",
+            zIndex: 3
+          }}
+        />
+
+        <div
+          id="overlay"
+          ref={overlayRef}
+          className={styles.CameraAim}
+        />
       </div>
     </>
   );
