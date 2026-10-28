@@ -35,7 +35,7 @@ function App() {
   const totalKeys = 8; // 鍵の総数
   useEffect(() => {
     // タイマーを「浮かせて表示」したいゲーム番号をここで定義
-    const floatingTimerGames = new Set([1, 3, 7]); // 必要に応じてゲーム番号を追加
+    const floatingTimerGames = new Set([1, 3, 7, 8, 9]); // 必要に応じてゲーム番号を追加
     setTimerState(floatingTimerGames.has(playState));
   }, [playState]);
 
