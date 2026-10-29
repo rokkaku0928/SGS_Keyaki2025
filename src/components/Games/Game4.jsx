@@ -1,43 +1,64 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import styles from "./Game.module.css";
 
-function Game4({ scoreState, setScoreState, playState, setPlayState }) {
-
+function Game4() {
   useEffect(() => {
     function handleMessage(event) {
       if (!event.data || typeof event.data !== "object") return;
 
-      // ★共通のリロード処理
-      const reloadApp = () => {
-        // 次回の起動時のために必要な情報を保存する
-        // (App.jsxで読み込めるようにキー名を合わせる)
-        sessionStorage.setItem("gameState", "Playing"); // ゲームモードを維持
-        sessionStorage.setItem("playState", 0);         // カメラ画面に戻す
-        
-        // ページを強制リロード（これでメモリが完全に解放される）
-        window.location.reload();
-      };
+      const { type } = event.data;
 
-      if (event.data.type === "BackButton") {
-        // スコアは変えずにリロード
-        reloadApp();
+      if (type !== "BackButton" && type !== "NextButton") {
+        return;
       }
 
-      if (event.data.type === "NextButton") {
-        // ★ここでスコアを加算して保存してからリロード
-        const newScore = scoreState + 1;
-        sessionStorage.setItem("gameScore", newScore);
-        
-        reloadApp();
+      if (type === "NextButton") {
+        // 既存の獲得履歴を読み込む
+        let collectedKeys = [];
+
+        try {
+          collectedKeys = JSON.parse(
+            sessionStorage.getItem("collectedKeys") || "[]"
+          );
+
+          if (!Array.isArray(collectedKeys)) {
+            collectedKeys = [];
+          }
+        } catch {
+          collectedKeys = [];
+        }
+
+        // Game4の鍵を追加。重複も許可
+        collectedKeys.push(4);
+
+        sessionStorage.setItem(
+          "collectedKeys",
+          JSON.stringify(collectedKeys)
+        );
+
+        // スコアを1加算
+        const newScore =
+          Number(sessionStorage.getItem("gameScore") || "0") + 1;
+
+        sessionStorage.setItem("gameScore", String(newScore));
       }
+
+      // カメラ画面へ戻る
+      sessionStorage.setItem("gameState", "Playing");
+      sessionStorage.setItem("playState", "0");
+
+      window.location.reload();
     }
 
     window.addEventListener("message", handleMessage);
-    return () => window.removeEventListener("message", handleMessage);
-  }, [scoreState]); // scoreStateを使うので依存配列に入れる
+
+    return () => {
+      window.removeEventListener("message", handleMessage);
+    };
+  }, []);
 
   return (
-    <div className={styles.gameContainer}>
+    <div className={styles.PortraitGame}>
       <iframe
         key="unity4"
         src="/unity4/index.html"
