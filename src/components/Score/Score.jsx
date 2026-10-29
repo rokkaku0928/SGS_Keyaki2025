@@ -46,7 +46,7 @@ export default function Score({ collectedKeys = [] }) {
             key={`collected-${index}`}
             src={image}
             width="50"
-            height="60"
+            height="50"
             alt={`鍵${keyNumber}`}
             className="w-12 h-12 object-contain"
           />
@@ -59,8 +59,8 @@ export default function Score({ collectedKeys = [] }) {
           <img
             key={`locked-${index}`}
             src={lockedKeyImageSrc}
-            width="50"
-            height="60"
+            width="40"
+            height="50"
             alt="未取得の鍵"
             className="w-12 h-12 object-contain"
           />

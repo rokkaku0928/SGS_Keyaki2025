@@ -118,7 +118,7 @@
    ========================= */
 
 .PortraitGame {
-  width: min(1200px, 100vw);
+  width: calc(100vw - 15px);
   aspect-ratio: 9 / 16;
 
   margin: auto;

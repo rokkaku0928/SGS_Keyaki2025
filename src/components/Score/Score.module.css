@@ -2,12 +2,12 @@
     position:fixed;
     left: 0;
     right: 0;
-    bottom: 10px;
+    bottom: 60px;
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
     align-items: center;
-    padding: 20px;
+    padding: 10px;
     z-index: 3;
-    padding-bottom: calc(12px + env(safe-area-inset-bottom));
+    padding-bottom: calc(10px + env(safe-area-inset-bottom));
 }
