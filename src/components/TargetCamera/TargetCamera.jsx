@@ -1,8 +1,8 @@
-
 import React, { useEffect, useRef } from 'react';
 import styles from "./TargetCamera.module.css";
 import jsQR from "jsqr";
 import cameraBgm from "../../assets/Project_261018_test2.mp3";
+import cyberPinkFrame from "../../assets/CyberPinkFrame.png";
 
 function TargetCamera({ playState, setPlayState }) {
   const videoRef = useRef(null);
@@ -202,19 +202,21 @@ function TargetCamera({ playState, setPlayState }) {
           playsInline
           autoPlay
           muted
-          style={{
-            position: "absolute",
-            zIndex: 3
-          }}
+          className={styles.CameraVideo}
+        />
+
+        <img
+          src={cyberPinkFrame}
+          className={styles.CameraFrame}
+          alt=""
         />
 
         <div
-          id="overlay"
           ref={overlayRef}
           className={styles.CameraAim}
         />
       </div>
-    </>
+      </>
   );
 }
 

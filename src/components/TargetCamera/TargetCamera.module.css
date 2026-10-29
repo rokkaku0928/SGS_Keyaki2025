@@ -1,11 +1,30 @@
-.CameraPosition{
-    padding: 20px 20px;
-    position: fixed;     /* 画面に対して固定位置 */
-    top: 0;              /* 上端に配置 */
-    left: 0;
+.CameraPosition {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+
+    width: min(100vw, 56.25dvh);
+    aspect-ratio: 9 / 16;
+
+    overflow: hidden;
+    background: black;
 }
 
-.CameraAim{
-    position: 'absolute';
-    border: 1px solid #F00;
+.CameraVideo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+}
+
+.CameraFrame {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    pointer-events: none;
 }

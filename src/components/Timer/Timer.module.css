@@ -1,40 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&display=swap');
+
 :root {
   --timer-height: 80px;
 }
 
-/* 共通のスタイル（文字サイズやフォントなど） */
+/* 共通：近未来風タイマーパネル */
 .timerContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: red;
-    color: white;
-    font-weight: 700;
-    z-index: 1000;
-    box-sizing: border-box;
-    /* fontタグの代わりにCSSでサイズ指定推奨 */
-    font-size: 2.2rem; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+
+  color: #A72BB5;
+
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
+
+
+  z-index: 1000;
+  box-sizing: border-box;
 }
 
-/* モードA: 今までのスタイル（上部全体） */
+/* モードA：画面上部全体 */
 .headerStyle {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: var(--timer-height);
-    padding: 8px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--timer-height);
+  padding: 8px;
 }
 
-/* モードB: 今回追加するゲーム画面用のスタイル（左上固定） */
+/* モードB：ゲーム画面の左上 */
 .floatingStyle {
-    position: fixed;
-    top: 0;
-    left: 0;
-    margin: 10px;
-    padding: 10px 20px; /* 上下10px 左右20px (少し調整しました) */
-    border-radius: 10px; /* 角を丸くしてボタンっぽく見やすく */
-    width: auto;         /* 横幅をなりゆきに */
-    height: auto;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.3); /* 視認性を上げるための影 */
+  position: fixed;
+  top: 0;
+  left: 0;
+  margin: 10px;
+  padding: 10px 20px;
+  width: auto;
+  height: auto;
+  border-radius: 10px;
+}
+
+/* スマホ画面向け */
+@media (max-width: 450px) {
+  .timerContainer {
+    font-size: 1.8rem;
+    gap: 8px;
+  }
+
+  .floatingStyle {
+    padding: 8px 14px;
+  }
 }
