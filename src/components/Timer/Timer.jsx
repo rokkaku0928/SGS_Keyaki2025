@@ -6,7 +6,7 @@ const ONE_MINUTES = 60000;
 const ONE_SECONDS = 1000;
 
 function Timer(props) {
-  const Limit_Time = 480000;
+  const Limit_Time = 600000;
 
   const [timerCount, setTimerCount] = useState(() => {
     const savedTime = sessionStorage.getItem("timerCount");
