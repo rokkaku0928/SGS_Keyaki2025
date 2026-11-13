@@ -14,6 +14,9 @@ import Game6 from './components/Games/Game6';
 import Game7 from './components/Games/Game7';
 import Game8 from './components/Games/Game8';
 import Game9 from './components/Games/Game9';
+import Game10 from './components/Games/Game10';
+import Game11 from './components/Games/Game11';
+import Game12 from './components/Games/Game12';
 
 import TargetCamera from './components/TargetCamera/TargetCamera';
 import Timer from './components/Timer/Timer';
@@ -44,13 +47,13 @@ function App() {
     return savedScore !== null ? Number(savedScore) : 0;
   });
 
-  // playStateが0ならカメラ、1～9なら各ゲーム
+  // playStateが0ならカメラ、1～12なら各ゲーム
   const [playState, setPlayState] = useState(() => {
     const saved = sessionStorage.getItem('playState');
     return saved !== null ? Number(saved) : 0;
   });
 
-  const totalKeys = 8;
+  const totalKeys = 12; // 鍵の総数を定義
 
   // ゲーム状態を保存データから読み込む
   const [gameState, setGameState] = useState(() => {
@@ -79,7 +82,7 @@ function App() {
 
   // タイマーを浮かせて表示するゲーム番号
   useEffect(() => {
-    const floatingTimerGames = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+    const floatingTimerGames = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
     setTimerState(floatingTimerGames.has(playState));
   }, [playState]);
 
@@ -127,6 +130,9 @@ function App() {
           <Game7 key="game7" {...gameProps} />,
           <Game8 key="game8" {...gameProps} />,
           <Game9 key="game9" {...gameProps} />,
+          <Game10 key="game10" {...gameProps} />,
+          <Game11 key="game11" {...gameProps} />,
+          <Game12 key="game12" {...gameProps} />,
         ];
 
         return (
@@ -174,7 +180,7 @@ function App() {
           );
         }
 
-        if (scoreState <= 2) {
+        if (scoreState <= 3) {
           return (
             <EndScreen
               title="まずまずだ"
@@ -185,7 +191,7 @@ function App() {
           );
         }
 
-        if (scoreState <= 5) {
+        if (scoreState <= 7) {
           return (
             <EndScreen
               title="よくやった！！"
@@ -196,7 +202,7 @@ function App() {
           );
         }
 
-        if (scoreState <= 8) {
+        if (scoreState <= 10) {
           return (
             <EndScreen
               title="素晴らしい！"

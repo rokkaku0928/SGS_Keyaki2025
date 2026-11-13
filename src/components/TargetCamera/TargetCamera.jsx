@@ -155,7 +155,7 @@ function TargetCamera({ playState, setPlayState }) {
                   resultText.split("-")[1]
                 );
 
-                if (num >= 1 && num <= 9) {
+                if (num >= 1 && num <= 12) {
                   setPlayState(num);
                 }
               }
