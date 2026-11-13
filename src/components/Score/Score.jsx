@@ -10,6 +10,9 @@ import key6 from "../../assets/key/key6.png";
 import key7 from "../../assets/key/key7.png";
 import key8 from "../../assets/key/key8.png";
 import key9 from "../../assets/key/key9.png";
+import key10 from "../../assets/key/key10.png";
+import key11 from "../../assets/key/key11.png";
+import key12 from "../../assets/key/key12.png";
 
 import lockedKeyImageSrc from "../../assets/KeyShadow.png";
 import styles from "./Score.module.css";
@@ -24,13 +27,16 @@ const keyImages = {
   7: key7,
   8: key8,
   9: key9,
+  10: key10,
+  11: key11,
+  12: key12,
 };
 
 export default function Score({ collectedKeys = [] }) {
   // 空欄は獲得回数に応じて減らす
   const remainingKeys = Math.max(
     0,
-    9 - collectedKeys.length
+    12 - collectedKeys.length
   );
 
   return (

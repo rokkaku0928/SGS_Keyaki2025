@@ -58,7 +58,7 @@ function Game3() {
   }, []);
 
   return (
-    <div className={styles.PortraitGame}>
+    <div className={styles.LargeWideGame}>
       <iframe
         key="unity3"
         src="/unity3/index.html"
