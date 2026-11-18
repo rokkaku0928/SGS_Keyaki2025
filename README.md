@@ -25,7 +25,7 @@ If you are developing a production application, we recommend using TypeScript wi
 
 注：最初のコマンドchocoはChocolateyといってWindows向けに開発されたオープンソースのパッケージ管理システムです。じつはこのインストールにもかなり骨が折れた（個人的に）なんですがこれを読んでる人はすんなりできると信じて祈るばかりです。
 
-# 追記(自環境(Muuu-ame)以外の動作が確認できていないことを留意、また使用者本人のバージョンに合わせて対応すること)
+## 追記(自環境(Muuu-ame)以外の動作が確認できていないことを留意、また使用者本人のバージョンに合わせて対応すること)
 
 ## 開発環境
 
@@ -51,13 +51,7 @@ nvm use 24.22.3
 npm ci
 ```
 
-### 3. 開発サーバーを起動
-
-```powershell
-npm run dev
-```
-
-### 4. 本番ビルド
+### 3. 本番ビルド
 
 ```powershell
 npm run build
