@@ -36,23 +36,11 @@ If you are developing a production application, we recommend using TypeScript wi
 
 ## セットアップ
 
-### 1. Node.jsのバージョンを切り替え
+### Node.jsのバージョンを切り替え
 
 nvm-windowsを使用する場合：
 
 ```powershell
 nvm install 24.22.3
 nvm use 24.22.3
-```
-
-### 2. 依存関係をインストール
-
-```powershell
-npm ci
-```
-
-### 3. 本番ビルド
-
-```powershell
-npm run build
 ```
