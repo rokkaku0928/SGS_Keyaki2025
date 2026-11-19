@@ -21,7 +21,29 @@
         ]
       },
       {
+        "source": "**/*.gz",
+        "headers": [
+          {
+            "key": "Content-Encoding",
+            "value": "gzip"
+          },
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=3600, no-transform"
+          }
+        ]
+      },
+      {
         "source": "**/*.wasm.br",
+        "headers": [
+          {
+            "key": "Content-Type",
+            "value": "application/wasm"
+          }
+        ]
+      },
+      {
+        "source": "**/*.wasm.gz",
         "headers": [
           {
             "key": "Content-Type",
@@ -39,6 +61,15 @@
         ]
       },
       {
+        "source": "**/*.framework.js.gz",
+        "headers": [
+          {
+            "key": "Content-Type",
+            "value": "application/javascript"
+          }
+        ]
+      },
+      {
         "source": "**/*.data.br",
         "headers": [
           {
@@ -48,29 +79,11 @@
         ]
       },
       {
-        "source": "**/*.wasm",
-        "headers": [
-          {
-            "key": "Content-Type",
-            "value": "application/wasm"
-          }
-        ]
-      },
-      {
-        "source": "**/*.data",
+        "source": "**/*.data.gz",
         "headers": [
           {
             "key": "Content-Type",
             "value": "application/octet-stream"
-          }
-        ]
-      },
-      {
-        "source": "**/*.js",
-        "headers": [
-          {
-            "key": "Content-Type",
-            "value": "application/javascript"
           }
         ]
       }
