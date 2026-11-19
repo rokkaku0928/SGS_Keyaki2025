@@ -13,23 +13,6 @@
           {
             "key": "Content-Encoding",
             "value": "br"
-          },
-          {
-            "key": "Cache-Control",
-            "value": "public, max-age=3600, no-transform"
-          }
-        ]
-      },
-      {
-        "source": "**/*.gz",
-        "headers": [
-          {
-            "key": "Content-Encoding",
-            "value": "gzip"
-          },
-          {
-            "key": "Cache-Control",
-            "value": "public, max-age=3600, no-transform"
           }
         ]
       },
@@ -43,47 +26,11 @@
         ]
       },
       {
-        "source": "**/*.wasm.gz",
-        "headers": [
-          {
-            "key": "Content-Type",
-            "value": "application/wasm"
-          }
-        ]
-      },
-      {
-        "source": "**/*.framework.js.br",
+        "source": "**/*.js.br",
         "headers": [
           {
             "key": "Content-Type",
             "value": "application/javascript"
-          }
-        ]
-      },
-      {
-        "source": "**/*.framework.js.gz",
-        "headers": [
-          {
-            "key": "Content-Type",
-            "value": "application/javascript"
-          }
-        ]
-      },
-      {
-        "source": "**/*.data.br",
-        "headers": [
-          {
-            "key": "Content-Type",
-            "value": "application/octet-stream"
-          }
-        ]
-      },
-      {
-        "source": "**/*.data.gz",
-        "headers": [
-          {
-            "key": "Content-Type",
-            "value": "application/octet-stream"
           }
         ]
       }
