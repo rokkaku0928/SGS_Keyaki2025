@@ -1,3 +1,4 @@
+
 {
   "hosting": {
     "public": "dist",
@@ -26,11 +27,20 @@
         ]
       },
       {
-        "source": "**/*.js.br",
+        "source": "**/*.framework.js.br",
         "headers": [
           {
             "key": "Content-Type",
             "value": "application/javascript"
+          }
+        ]
+      },
+      {
+        "source": "**/*.data.br",
+        "headers": [
+          {
+            "key": "Content-Type",
+            "value": "application/octet-stream"
           }
         ]
       }
