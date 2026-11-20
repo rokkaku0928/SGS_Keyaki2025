@@ -3,11 +3,11 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Unity Web Player | My project</title>
+    <title>Unity Web Player | 2D Test Space</title>
   </head>
   <body style="text-align: center; padding: 0; border: 0; margin: 0;">
-    <canvas id="unity-canvas" width=450 height=800 tabindex="-1" style="width: 450px; height: 800px; background: #231F20"></canvas>
-    <script src="Build/AirPlainBuild.loader.js"></script>
+    <canvas id="unity-canvas" width=960 height=600 tabindex="-1" style="width: 960px; height: 600px; background: #231F20"></canvas>
+    <script src="Build/zisakuGame.loader.js"></script>
     <script>
       if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
         // Mobile device style: fill the whole browser client area with the game canvas:
@@ -27,12 +27,12 @@
 
       createUnityInstance(document.querySelector("#unity-canvas"), {
         arguments: [],
-        dataUrl: "Build/AirPlainBuild.data.gz",
-        frameworkUrl: "Build/AirPlainBuild.framework.js.gz",
-        codeUrl: "Build/AirPlainBuild.wasm.gz",
+        dataUrl: "Build/zisakuGame.data.unityweb",
+        frameworkUrl: "Build/zisakuGame.framework.js.unityweb",
+        codeUrl: "Build/zisakuGame.wasm.unityweb",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "DefaultCompany",
-        productName: "My project",
+        productName: "2D Test Space",
         productVersion: "1.0",
         // matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
         // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
