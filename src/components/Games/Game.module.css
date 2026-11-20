@@ -133,12 +133,12 @@
 
 /* =========================
    汎用：縦画面・小
-   最大 1080 × 1920
+   最大 1000 × 1400
    ========================= */
 
 .MiddlePortraitGame {
-  width: min(1080px, 100vw);
-  aspect-ratio: 9 / 16;
+  width: min(1000px, 100vw);
+  aspect-ratio: 10 / 14;
 
   margin: auto;
   position: relative;
