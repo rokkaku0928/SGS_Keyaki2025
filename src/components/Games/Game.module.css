@@ -137,8 +137,8 @@
    ========================= */
 
 .MiddlePortraitGame {
-  width: min(1000px, 100vw);
-  aspect-ratio: 10 / 14;
+  width: min(1080px, 100vw);
+  aspect-ratio: 9 / 16;
 
   margin: auto;
   position: relative;
