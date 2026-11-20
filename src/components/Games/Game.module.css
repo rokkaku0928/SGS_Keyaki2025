@@ -131,6 +131,25 @@
   align-items: center;
 }
 
+/* =========================
+   汎用：縦画面・小
+   最大 1080 × 1920
+   ========================= */
+
+.MiddlePortraitGame {
+  width: min(1080px, 100vw);
+  aspect-ratio: 9 / 16;
+
+  margin: auto;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 
 /* =========================
    汎用：横画面・標準

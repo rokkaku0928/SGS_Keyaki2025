@@ -58,7 +58,7 @@ function Game12() {
   }, []);
 
   return (
-    <div className={styles.PortraitGame}>
+    <div className={styles.MiddlePortraitGame}>
       <iframe
         key="unity12"
         src="/unity12/index.html"
