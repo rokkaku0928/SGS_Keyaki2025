@@ -7,7 +7,7 @@
   </head>
   <body style="text-align: center; padding: 0; border: 0; margin: 0;">
     <canvas id="unity-canvas" width=960 height=600 tabindex="-1" style="width: 960px; height: 600px; background: #231F20"></canvas>
-    <script src="Build/Gamedayo.loader.js"></script>
+    <script src="Build/Downloads.loader.js"></script>
     <script>
       if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
         // Mobile device style: fill the whole browser client area with the game canvas:
@@ -26,21 +26,15 @@
 
       createUnityInstance(document.querySelector("#unity-canvas"), {
         arguments: [],
-        dataUrl: "Build/Gamedayo.data",
-        frameworkUrl: "Build/Gamedayo.framework.js",
-        codeUrl: "Build/Gamedayo.wasm",
+        dataUrl: "Build/Downloads.data.unityweb",
+        frameworkUrl: "Build/Downloads.framework.js.unityweb",
+        codeUrl: "Build/Downloads.wasm.unityweb",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "DefaultCompany",
         productName: "gemutukuritai",
         productVersion: "1.0",
         // matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
         // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
-      }).then((unityInstance) => {
-        // ★ React側が Quit() を実行できるようにグローバル変数に保管
-        window.unityInstance = unityInstance;
-      })
-      .catch((message) => {
-        alert(message);
       });
     </script>
   </body>
